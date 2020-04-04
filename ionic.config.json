@@ -1,0 +1,7 @@
+{
+  "name": "zarezerwuj",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
