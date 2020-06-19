@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebaseAPIKey: 'AIzaSyAqdMrn-pPrm4xody4qcVhY3iHb7XOBzbM',
+  googleMapsAPIKey: 'AIzaSyAFduF_5YX6yJ9_JSAqcB1nGxRjR2bawCU'
 };
 
 /*
