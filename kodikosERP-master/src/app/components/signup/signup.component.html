@@ -1,0 +1,61 @@
+<div id="menu" *ngIf="userIsAuthenticated">
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+    <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+    <mat-button-toggle routerLink="/userlist">Pracownicy</mat-button-toggle>
+    <mat-button-toggle class="imhere">Dodaj pracownika</mat-button-toggle>
+    <mat-button-toggle (click)="logout()">
+      {{ loggedInUser.name }} {{ loggedInUser.surname }}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+
+<div id="kartaDiv">
+  <mat-card class="karta">
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <!-- postForm is a local reference -->
+
+    <form (submit)="onSignup(signupForm)" #signupForm="ngForm" *ngIf="!isLoading">
+      <mat-form-field>
+        <input matInput name="login" ngModel type="text" placeholder="Twoja nazwa użytkownika" #loginInput="ngModel"
+          required>
+        <mat-error *ngIf="loginInput.invalid">Podaj nazwę użytkownika.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput name="name" ngModel type="text" placeholder="Imię" #nameInput="ngModel" required>
+        <mat-error *ngIf="nameInput.invalid">Podaj imię.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput name="surname" ngModel type="text" placeholder="Nazwisko" #surnameInput="ngModel" required>
+        <mat-error *ngIf="surnameInput.invalid">Podaj nazwisko.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput name="email" ngModel type="email" placeholder="e-mail" #emailInput="ngModel" email required>
+        <mat-error *ngIf="emailInput.invalid">Wpisz adres e-mail.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input type="password" name="password" ngModel matInput placeholder="hasło" #passwordInput="ngModel" required>
+        <mat-error *ngIf="passwordInput.invalid">Wpisz hasło.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput name="department" ngModel type="text" placeholder="dział" #departmentInput="ngModel">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput name="phone" ngModel type="text" placeholder="telefon" #phoneInput="ngModel">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput name="status" ngModel type="text" placeholder="status" #statusInput="ngModel">
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" id="logBut">Dodaj nowego użytkownika</button>
+    </form>
+
+  </mat-card>
+</div>

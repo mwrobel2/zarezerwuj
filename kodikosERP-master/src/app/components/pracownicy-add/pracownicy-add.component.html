@@ -1,0 +1,2662 @@
+<main>
+  <span *ngIf="userIsAuthenticated">
+    <div id="menu">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+        <mat-button-toggle routerLink="/lazy/pracownicy">Pracownicy</mat-button-toggle>
+        <mat-button-toggle class="imhere"><b>Dodaj pracownika</b></mat-button-toggle>
+        <mat-button-toggle (click)="logout()">{{ this.loggedInUser.name }} {{ this.loggedInUser.surname }}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <mat-card>
+      <!-- template driven form -->
+
+      <form [formGroup]="form" (submit)="onSavePracownicy()">
+        <button mat-raised-button color="primary" type="submit">
+          Zapisz pracownika
+        </button>
+        &nbsp;
+        <button mat-raised-button color="primary" type="button" (click)="powrot()">
+          Anuluj
+        </button>
+        <h4>Informacje podstawowe</h4>
+        <mat-form-field>
+          <input matInput type="text" formControlName="login" placeholder="Login użytkownika" required />
+        </mat-form-field>
+        <!-- <mat-form-field>
+          <input matInput type="text" formControlName="username" placeholder="username" />
+        </mat-form-field> -->
+        <mat-form-field>
+          <input matInput type="text" formControlName="name" placeholder="Imię" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="drugieImie" placeholder="Drugie imię" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="surname" placeholder="Nazwisko" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="displayName" placeholder="Nazwa wyświetlana" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Płeć</mat-label>
+          <mat-select formControlName="plec">
+            <mat-option *ngFor="let plec of dictionaries[1].values" value="{{ plec }}">{{ plec }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="nazwiskoRodowe" placeholder="Nazwisko rodowe" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="nazwiskoMatki" placeholder="Nazwisko matki" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="imieMatki" placeholder="Imię matki" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="imieOjca" placeholder="Imię ojca" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="date" formControlName="dataUrodzenia" placeholder="Data urodzenia"
+            value="{{ pracownicy.dataUrodzenia | date:'yyyy-MM-dd' }}" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="miejsceUrodzenia" placeholder="Miejsce urodzenia" />
+        </mat-form-field>
+        <div class="div2b">
+          <mat-checkbox name="obcokrajowiec" formControlName="obcokrajowiec">Czy pracownik jest obcokrajowcem?
+          </mat-checkbox>
+        </div>
+        <mat-form-field>
+          <input matInput type="text" formControlName="kartaStalegoPobytu"
+            placeholder="Karta stałego pobytu (jeśli wydano)" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="narodowosc" placeholder="Narodowość" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="obywatelstwo" placeholder="Obywatelstwo" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="dowodOsobisty" placeholder="Nr dowodu osobistego" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="dowodWydanyPrzez" placeholder="Organ wydający dowód osobisty" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="paszport" placeholder="Nr paszportu" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="paszportWydanyPrzez" placeholder="Organ wydający paszport" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="email" placeholder="Email" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="phone" placeholder="Telefon" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="department" placeholder="Dział" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="pesel" placeholder="Pesel" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="nip" placeholder="Nip" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="urzadSkarbowy" placeholder="Urząd skarbowy" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="wyksztalcenie" placeholder="Wykształcenie" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="zawodWyuczony" placeholder="Zawód wyuczony" />
+        </mat-form-field>
+        <div class="div2b">
+          <mat-checkbox name="aktualniePracujacy" formControlName="aktualniePracujacy">Czy pracownik aktualnie pracuje?
+          </mat-checkbox>
+        </div>
+        <mat-form-field>
+          <input matInput type="text" formControlName="status" placeholder="Status" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="nrKartyWejsciowej" placeholder="Nr karty wejściowej" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" formControlName="nrKartyParkingowej" placeholder="Nr karty parkingowej" />
+        </mat-form-field>
+
+        <!-- dodawanie rachunków bankowych -->
+
+        <div *ngIf="
+            pracownicy.rachunkiBankowe && pracownicy.rachunkiBankowe.length > 0
+          ">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="rachunkiBankoweDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="nr">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Numer konta
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.nr }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="glowny">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Główny rachunek?
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngIf="element.glowny">TAK</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nazwaBanku">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Nazwa banku
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.nazwaBanku }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editRachunkiBankowe(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteRachunkiBankowe(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="rachunkiBankoweKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: rachunkiBankoweKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="rachunkiBankoweGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="rachunkiBankowe">
+              <mat-expansion-panel-header>
+                <b>Dodaj kolejny rachunek bankowy</b>
+              </mat-expansion-panel-header>
+              <mat-form-field>
+                <input matInput type="text" formControlName="rachunkiBankoweNr" placeholder="Numer konta" />
+              </mat-form-field>
+              <mat-checkbox (change)="rachunkiBankoweDomyslne()" [checked]="rachunkiBankoweGroup.value.glowny">
+                Główny rachunek?
+              </mat-checkbox>
+              <mat-form-field>
+                <input matInput type="text" formControlName="rachunkiBankoweNazwaBanku" placeholder="Nazwa banku" />
+              </mat-form-field>
+
+              <button mat-raised-button color="primary" type="button" (click)="addRachunkiBankowe()">
+                Dodaj konto
+              </button>
+              &nbsp;
+              <button mat-raised-button type="button" (click)="rachunkiBankowe = !rachunkiBankowe">
+                Ukryj formatkę dodawania kolejnego konta
+              </button>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- dodawanie stanowiska -->
+
+        <div *ngIf="pracownicy.stanowiska && pracownicy.stanowiska.length > 0">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="stanowiskaDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="stanowisko">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Nazwa stanowiska
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.stanowisko }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="od">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.od | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="do">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.do | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="uwagi">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Uwagi
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.uwagi }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="aktualne">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Czy stanowisko jest aktualne?
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngIf="element.aktualne">TAK</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firmaNazwa">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Nazwa firmy
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.firmaNazwa }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="department">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Dział
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.department }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dataZatrudnienia">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Data zatrudnienia
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.dataZatrudnienia | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="rodzajUmowy">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Rodzaj umowy
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.rodzajUmowy }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dataZwolnienia">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Data zwolnienia
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.dataZwolnienia | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="zajmowaneStanowisko">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Zajmowane stanowisko
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.zajmowaneStanowisko }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="zawodWykonywany">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Zawód wykonywany
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.zawodWykonywany }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="stanowiskaUwagi">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Uwagi do stanowiska
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.stanowiskaUwagi }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiStanowiska">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiStanowiska"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editStanowiska(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteStanowiska(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="stanowiskaKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: stanowiskaKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="stanowiskaGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="stanowiska">
+              <mat-expansion-panel-header>
+                <b>Dodaj stanowisko</b>
+              </mat-expansion-panel-header>
+              <mat-form-field>
+                <input matInput type="text" formControlName="stanowiskaStanowisko" placeholder="Nazwa stanowiska" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="stanowiskaOd" placeholder="Od"
+                  value="{{ stanowiskaGroup.value.stanowiskaOd | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="stanowiskaDo" placeholder="Do"
+                  value="{{ stanowiskaGroup.value.stanowiskaDo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="stanowiskaUwagi" placeholder="Uwagi" />
+              </mat-form-field>
+              <mat-checkbox (change)="stanowiskaAktualne()" [checked]="stanowiskaGroup.value.aktualne">
+                Czy aktualne?
+              </mat-checkbox>
+              <mat-form-field>
+                <mat-label>Nazwa firmy</mat-label>
+                <mat-select formControlName="stanowiskaFirmaNazwa">
+                  <mat-option *ngFor="let firmaNazwa of dictionaries[3].values" value="{{ firmaNazwa }}">
+                    {{ firmaNazwa }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="stanowiskaDepartment" placeholder="Dział" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="stanowiskaDataZatrudnienia" placeholder="Data zatrudnienia"
+                  value="{{ stanowiskaGroup.value.stanowiskaDataZatrudnienia | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="stanowiskaRodzajUmowy" placeholder="Rodzaj umowy" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="stanowiskaDataZwolnienia" placeholder="Data zwolnienia"
+                  value="{{ stanowiskaGroup.value.stanowiskaDataZwolnienia | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="stanowiskaZajomwaneStanowisko"
+                  placeholder="Zajmowane stanowisko" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="stanowiskaZawodWykonywany"
+                  placeholder="Zawód wykonywany" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="stanowiskaStanowiskaUwagi"
+                  placeholder="Uwagi do stanowiska" />
+              </mat-form-field>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikuStanowiska.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikuStanowiska" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker (change)="onFilesPicked($event, 'Stanowiska', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addStanowiska()">
+                  Dodaj Stanowisko
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="stanowiska = !stanowiska">
+                  Ukryj formatkę dodawania stanowiska
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="itemClass" *ngIf="!stanowiska">
+          <button mat-raised-button type="button" (click)="nextStanowiska()">
+            <b>Dodaj stanowisko</b>
+          </button>
+        </div> -->
+
+        <!-- Dodawanie umowy o pracę -->
+
+        <div *ngIf="pracownicy.umowyoPrace && pracownicy.umowyoPrace.length > 0">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="umowyoPraceDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="numer">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Numer umowy
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.numer }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="od">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Umowa od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.od | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="do">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Umowa do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.do | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="typUmowy">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Typ umowy
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.typUmowy }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dataPodpisu">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Data podpisu
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.dataPodpisu | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="przedstawicielZakladu">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Przedstawiciel zakładu
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.przedstawicielZakladu }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="umowyoPraceuwagi">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Uwagi do umowy
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.umowyoPraceuwagi }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="aktualna">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Czy aktualna?
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngIf="element.aktualna">TAK</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firmaNazwa">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Nazwa firmy
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.firmaNazwa }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiUmowyPraca">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiUmowyPraca"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editUmowyoPrace(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteUmowyoPrace(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="umowyoPraceKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: umowyoPraceKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="umowyoPraceGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="umowyoPrace">
+              <mat-expansion-panel-header>
+                <b>Dodaj umowę o pracę</b>
+              </mat-expansion-panel-header>
+              <mat-form-field>
+                <input matInput type="text" formControlName="umowyoPracenumer" placeholder="Numer umowy" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="umowyoPraceod" placeholder="Umowa od"
+                  value="{{ umowyoPraceGroup.value.umowyoPraceod | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="umowyoPracedo" placeholder="Umowa do"
+                  value="{{ umowyoPraceGroup.value.umowyoPracedo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="umowyoPracetypUmowy" placeholder="Typ umowy" />
+              </mat-form-field>
+              <mat-checkbox (change)="umowyoPraceAktualna()" [checked]="umowyoPraceGroup.value.aktualna">Aktualna?
+              </mat-checkbox>
+              <mat-form-field>
+                <mat-label>Nazwa firmy</mat-label>
+                <mat-select formControlName="umowyoPracefirmaNazwa">
+                  <mat-option *ngFor="let firmaNazwa of dictionaries[3].values" value="{{ firmaNazwa }}">
+                    {{ firmaNazwa }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="umowyoPraceprzedstawicielZakladu"
+                  placeholder="Przedstawiciel zakładu" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="umowyoPracedataPodpisu" placeholder="Data podpisu"
+                  value="{{ umowyoPraceGroup.value.umowyoPracedataPodpisu | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="umowyoPraceumowyoPraceuwagi"
+                  placeholder="Uwagi do umowy" />
+              </mat-form-field>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikuumowyoPrace.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikuumowyoPrace" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker (change)="onFilesPicked($event, 'Umowy o pracę', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addUmowyoPrace()">
+                  Dodaj Umowę
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="umowyoPrace = !umowyoPrace">
+                  Ukryj formatkę dodawania umowy
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!umowyoPrace">
+          <button mat-raised-button type="button" (click)="nextUmowyoPrace()">
+            Dodaj umowę o pracę
+          </button>
+        </div> -->
+
+        <!-- przebieg zatrudnienia -->
+
+        <div *ngIf="
+            pracownicy.przebiegZatrudnienia &&
+            pracownicy.przebiegZatrudnienia.length > 0
+          ">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="przebiegZatrudnieniaDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="rodzajZmiany">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Rodzaj zmiany
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.rodzajZmiany }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="od">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Zatrudnienie od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.od | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="do">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Zatrudnienie do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.do | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="stanowisko">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Stanowisko
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.stanowisko }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dzial">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Dział
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.dzial }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="wymiarZatrudnienia">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Wymiar zatrudnienia
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.wymiarZatrudnienia }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="wymiarZatrudnieniaUlamek">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Wymiar zatrudnienia ułamek
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.wymiarZatrudnieniaUlamek }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="placaZasadnicza">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Płaca zasadnicza
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.placaZasadnicza }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="placZasWaluta">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Waluta płacy zasadniczej
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.placZasWaluta }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dodatekFunkcyjny">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Dodatek funkcyjny
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.dodatekFunkcyjny }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dodFunkcWaluta">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Waluta dodatku funkcyjnego
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.dodFunkcWaluta }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dodatek">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pozostałe dodatki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.dodatek }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dodatekWaluta">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Waluta pozostałych dodatków
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.dodatekWaluta }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firmaNazwa">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Nazwa firmy
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.firmaNazwa }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="podstawaPrawnaZatrudnienia">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Podstawa prawna zatrudnienia
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.podstawaPrawnaZatrudnienia }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="rodzajUmowy">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Rodzaj umowy
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.rodzajUmowy }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiPrzebZatr">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiPrzebZatr"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editPrzebiegZatrudnienia(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deletePrzebiegZatrudnienia(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="przebiegZatrudnieniaKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: przebiegZatrudnieniaKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="przebiegZatrudnieniaGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="przebiegZatrudnienia">
+              <mat-expansion-panel-header>
+                <b>Dodaj przebieg zatrudnienia</b>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <input matInput type="date" formControlName="przebiegZatrudnieniaod" placeholder="Zatrudnienie od"
+                  value="{{ przebiegZatrudnieniaGroup.value.przebiegZatrudnieniaod | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="przebiegZatrudnieniado" placeholder="Zatrudnienie do"
+                  value="{{ przebiegZatrudnieniaGroup.value.przebiegZatrudnieniado | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="przebiegZatrudnieniarodzajZmiany"
+                  placeholder="Rodzaj zmiany" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="przebiegZatrudnieniadzial" placeholder="Dział" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="number" formControlName="przebiegZatrudnieniawymiarZatrudnienia"
+                  placeholder="Wymiar zatrudnienia" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="przebiegZatrudnieniawymiarZatrudnieniaUlamek"
+                  placeholder="Wymiar zatrudnienia ułamek" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="number" formControlName="przebiegZatrudnieniaplacaZasadnicza"
+                  placeholder="Płaca zasadnicza" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="przebiegZatrudnieniaplacZasWaluta"
+                  placeholder="Waluta płacy zasadniczej" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="number" formControlName="przebiegZatrudnieniadodatekFunkcyjny"
+                  placeholder="Dodatek funkcyjny" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="przebiegZatrudnieniadodFunkcWaluta"
+                  placeholder="Waluta dodatku funkcyjnego" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="number" formControlName="przebiegZatrudnieniadodatek"
+                  placeholder="Pozostałe dodatki" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="przebiegZatrudnieniadodatekWaluta"
+                  placeholder="Waluta pozostałych odatków" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="przebiegZatrudnieniastanowisko" placeholder="Stanowisko" />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Nazwa firmy</mat-label>
+                <mat-select formControlName="przebiegZatrudnieniafirmaNazwa">
+                  <mat-option *ngFor="let firmaNazwa of dictionaries[3].values" value="{{ firmaNazwa }}">
+                    {{ firmaNazwa }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="przebiegZatrudnieniapodstawaPrawnaZatrudnienia"
+                  placeholder="Podstawa prawna zatrudnienia" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="przebiegZatrudnieniarodzajUmowy"
+                  placeholder="Rodzaj umowy" />
+              </mat-form-field>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikuprzebiegZatrudnienia.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikuprzebiegZatrudnienia" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker
+                      (change)="onFilesPicked($event, 'Przebieg zatrudnienia', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addPrzebiegZatrudnienia()">
+                  Dodaj przebieg zatrudnienia
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="przebiegZatrudnienia = !przebiegZatrudnienia">
+                  Ukryj formatkę dodawania przebiegu zatrudnienia
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!przebiegZatrudnienia">
+          <button mat-raised-button type="button" (click)="nextPrzebiegZatrudnienia()">
+            Dodaj przebieg zatrudnienia
+          </button>
+        </div> -->
+
+        <!-- adresy zamieszkania -->
+
+        <div *ngIf="
+            pracownicy.adresyZamieszkania &&
+            pracownicy.adresyZamieszkania.length > 0
+          ">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="adresyZamieszkaniaDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="kraj">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Kraj
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.kraj }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="od">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.od | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="do">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.do | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="wojewodztwo">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Województwo
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.wojewodztwo }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="powiat">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Powiat
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.powiat }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="gmina">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Gmina
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.gmina }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="miejscowosc">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Miejscowość
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.miejscowosc }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ulica">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Ulica
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.ulica }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="numerDomu">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Numer domu
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.numerDomu }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="numerMieszkania">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Numer mieszkania
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.numerMieszkania }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="kod">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Kod pocztowy
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.kod }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="tel">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Telefon
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.tel }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="aktualny">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Czy adres jest aktualny?
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.aktualny }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="adrZamUwagi">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Uwagi dotyczące adresu
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.adrZamUwagi }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editAdresyZamieszkania(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteAdresyZamieszkania(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="adresyZamieszkaniaKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: adresyZamieszkaniaKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="adresyZamieszkaniaGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="adresyZamieszkania">
+              <mat-expansion-panel-header>
+                <b>Dodaj adres zamieszkania</b>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <input matInput type="date" formControlName="adresyZamieszkaniaod" placeholder="Od"
+                  value="{{ adresyZamieszkaniaGroup.value.adresyZamieszkaniaod | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="adresyZamieszkaniado" placeholder="Do"
+                  value="{{ adresyZamieszkaniaGroup.value.adresyZamieszkaniado | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="adresyZamieszkaniakraj" placeholder="Kraj" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="adresyZamieszkaniapowiat" placeholder="Powiat" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="adresyZamieszkaniagmina" placeholder="Gmina" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="adresyZamieszkaniamiejscowosc" placeholder="Miejscowość" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="adresyZamieszkaniaulica" placeholder="Ulica" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="adresyZamieszkanianumerDomu" placeholder="Numer domu" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="adresyZamieszkanianumerMieszkania"
+                  placeholder="Numer mieszkania" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="adresyZamieszkaniakod" placeholder="Kod pocztowy" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="adresyZamieszkaniatel" placeholder="Telefon" />
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput type="text" formControlName="adresyZamieszkaniawojewodztwo" placeholder="Województwo" />
+              </mat-form-field>
+
+              <mat-checkbox (change)="adresyZamieszkaniaAktualny()" [checked]="adresyZamieszkaniaGroup.value.aktualny">
+                Adres aktualny?
+              </mat-checkbox>
+              <mat-form-field>
+                <input matInput type="text" formControlName="adresyZamieszkaniaadrZamUwagi"
+                  placeholder="Uwagi do adresu" />
+              </mat-form-field>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addAdresyZamieszkania()">
+                  Dodaj adres zamieszkania
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="adresyZamieszkania = !adresyZamieszkania">
+                  Ukryj formatkę dodawania adresu zamieszkania
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!adresyZamieszkania">
+          <button mat-raised-button type="button" (click)="nextAdresyZamieszkania()">
+            Dodaj adresyZamieszkania
+          </button>
+        </div> -->
+
+        <!-- dzieci -->
+
+        <div *ngIf="pracownicy.dzieci && pracownicy.dzieci.length > 0">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="dzieciDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="imieDziecka">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Imię dziecka
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.imieDziecka }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nazwiskoDziecka">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Nazwisko dziecka
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.nazwiskoDziecka }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dataUrodzeniaDziecka">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Data urodzenia dziecka
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.dataUrodzeniaDziecka | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="peselDziecka">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pesel dziecka
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.peselDziecka }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="zasilekPielegnOd">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Zasiłek pielęgnacyjny od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.zasilekPielegnOd | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="zasilekPielegnDo">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Zasiłek pielęgnacyjny do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.zasilekPielegnDo | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="zasilekRodzinnyOd">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Zasiłek rodzinny od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.zasilekRodzinnyOd | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="zasilekRodzinnyDo">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Zasiłek rodzinny do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.zasilekRodzinnyDo | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiDzieci">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiDzieci"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editDzieci(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteDzieci(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="dzieciKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: dzieciKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="dzieciGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="dzieci">
+              <mat-expansion-panel-header>
+                <b>Dodaj dzieci</b>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <input matInput type="text" formControlName="dzieciimieDziecka" placeholder="Imię dziecka" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="dziecinazwiskoDziecka" placeholder="Nazwisko dziecka" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="dziecidataUrodzeniaDziecka"
+                  placeholder="Data urodzenia dziecka"
+                  value="{{ dzieciGroup.value.dziecidataUrodzeniaDziecka | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="dziecipeselDziecka" placeholder="Pesel dziecka" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="dziecizasilekPielegnOd"
+                  placeholder="Zasiłek pielęgnacyjny od"
+                  value="{{ dzieciGroup.value.dziecizasilekPielegnOd | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="dziecizasilekPielegnDo"
+                  placeholder="Zasiłek pielęgnacyjny do"
+                  value="{{ dzieciGroup.value.dziecizasilekPielegnDo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="dziecizasilekRodzinnyOd" placeholder="Zasiłek rodzinny od"
+                  value="{{ dzieciGroup.value.dziecizasilekRodzinnyOd | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="dziecizasilekRodzinnyDo" placeholder="Zasiłek rodzinny do"
+                  value="{{ dzieciGroup.value.dziecizasilekRodzinnyDo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikudzieci.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikudzieci" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker (change)="onFilesPicked($event, 'Dzieci', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addDzieci()">
+                  Dodaj dzieci
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="dzieci = !dzieci">
+                  Ukryj formatkę dodawania dzieci
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!dzieci">
+          <button mat-raised-button type="button" (click)="nextDzieci()">
+            Dodaj dzieci
+          </button>
+        </div> -->
+
+        <!-- oświadczenia -->
+
+        <div *ngIf="pracownicy.oswiadczenia && pracownicy.oswiadczenia.length > 0">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="oswiadczeniaDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="nazwaOswiadczenia">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Nazwa oświadczenia
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.nazwaOswiadczenia }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="typOswiadczenia">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Typ oświadczenia
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.typOswiadczenia }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="OswOd">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Oświadczenie od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.OswOd | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="OswDo">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Oświadczenie do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.OswDo | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="kodZawoduOsw">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Kod zawodu oświadczenia
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.kodZawoduOsw }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="pracodawcaUzytkownikOsw">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pracodawca
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.pracodawcaUzytkownikOsw }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiOswiadczenia">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiOswiadczenia"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editOswiadczenia(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteOswiadczenia(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="oswiadczeniaKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: oswiadczeniaKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="oswiadczeniaGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="oswiadczenia">
+              <mat-expansion-panel-header>
+                <b>Dodaj oświadczenie</b>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <input matInput type="text" formControlName="oswiadczenianazwaOswiadczenia"
+                  placeholder="Nazwa oświadczenia" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="oswiadczeniatypOswiadczenia"
+                  placeholder="Typ oświadczenia" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="oswiadczeniaoswOd" placeholder="Oświadczenie od"
+                  value="{{ oswiadczeniaGroup.value.dziecizasilekRodzinnyOd | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="oswiadczeniaoswDo" placeholder="Oświadczenie do"
+                  value="{{ oswiadczeniaGroup.value.dziecizasilekRodzinnyDo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="oswiadczeniakodZawoduOsw"
+                  placeholder="Kod zawodu oświadczenia" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="oswiadczeniapracodawcaUzytkownikOsw"
+                  placeholder="Pracodawca" />
+              </mat-form-field>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikuoswiadczenia.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikuoswiadczenia" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker (change)="onFilesPicked($event, 'Oświadczenia', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addOswiadczenia()">
+                  Dodaj oświadczenie
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="oswiadczenia = !oswiadczenia">
+                  Ukryj formatkę dodawania oświadczenia
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!oswiadczenia">
+          <button mat-raised-button type="button" (click)="nextOswiadczenia()">
+            Dodaj oswiadczenia
+          </button>
+        </div> -->
+
+        <!-- zezwolenia  -->
+
+        <div *ngIf="pracownicy.zezwolenia && pracownicy.zezwolenia.length > 0">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="zezwoleniaDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="nazwaZezwolenia">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Nazwa zezwolenia
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.nazwaZezwolenia }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="typZezwolenia">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Typ zezwolenia
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.typZezwolenia }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ZezwOd">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Zezwolenie od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.ZezwOd | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ZezwDo">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Zezwolenie do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.ZezwDo | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="kodZawoduZezw">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Kod zawodu zezwolenia
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.kodZawoduZezw }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="pracodawcaUzytkownikZezw">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pracodawca
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.pracodawcaUzytkownikZezw }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiZezwolenia">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiZezwolenia"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editZezwolenia(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteZezwolenia(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="zezwoleniaKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: zezwoleniaKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="zezwoleniaGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="zezwolenia">
+              <mat-expansion-panel-header>
+                <b>Dodaj zezwolenie</b>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <input matInput type="text" formControlName="zezwolenianazwaZezwolenia"
+                  placeholder="Nazwa zezwolenia" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="zezwoleniatypZezwolenia" placeholder="Typ zezwolenia" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="zezwoleniazezwOd" placeholder="Zezwolenie od"
+                  value="{{ zezwoleniaGroup.value.zezwoleniazezwOd | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="zezwoleniazezwDo" placeholder="Zezwolenie do"
+                  value="{{ zezwoleniaGroup.value.zezwoleniazezwDo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="zezwoleniakodZawoduZezw"
+                  placeholder="Kod zawodu zezwolenia" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="zezwoleniapracodawcaUzytkownikZezw"
+                  placeholder="Pracodawca" />
+              </mat-form-field>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikuzezwolenia.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikuzezwolenia" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker (change)="onFilesPicked($event, 'Zezwolenia', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addZezwolenia()">
+                  Dodaj zezwolenie
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="zezwolenia = !zezwolenia">
+                  Ukryj formatkę dodawania zezwolenia
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!zezwolenia">
+          <button mat-raised-button type="button" (click)="nextZezwolenia()">
+            Dodaj zezwolenia
+          </button>
+        </div> -->
+
+        <!-- karty pobytu -->
+
+        <div *ngIf="pracownicy.kartyPobytu && pracownicy.kartyPobytu.length > 0">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="kartyPobytuDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="kartaOd">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Karta pobytu od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.kartaOd | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="kartaDo">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Karta pobytu do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.kartaDo | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nazwaKarty">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Nazwa karty pobytu
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.nazwaKarty }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="numerKarty">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Numer karty pobytu
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.numerKarty }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiKP">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiKP"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editKartyPobytu(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteKartyPobytu(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="kartyPobytuKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: kartyPobytuKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="kartyPobytuGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="kartyPobytu">
+              <mat-expansion-panel-header>
+                <b>Dodaj kartę pobytu</b>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <input matInput type="date" formControlName="kartyPobytukartaOd" placeholder="Karta pobytu od"
+                  value="{{ kartyPobytuGroup.value.kartyPobytukartaOd | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="kartyPobytukartaDo" placeholder="Karta pobytu do"
+                  value="{{ kartyPobytuGroup.value.kartyPobytukartaDo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="kartyPobytunazwaKarty" placeholder="Nazwa karty pobytu" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="kartyPobytunumerKarty" placeholder="Numer karty pobytu" />
+              </mat-form-field>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikukartyPobytu.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikukartyPobytu" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker (change)="onFilesPicked($event, 'Karty pobytu', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addKartyPobytu()">
+                  Dodaj kartę pobytu
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="kartyPobytu = !kartyPobytu">
+                  Ukryj formatkę dodawania karty pobytu
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!kartyPobytu">
+          <button mat-raised-button type="button" (click)="nextKartyPobytu()">
+            Dodaj kartyPobytu
+          </button>
+        </div> -->
+
+        <!-- paszporty -->
+
+        <div *ngIf="pracownicy.paszporty && pracownicy.paszporty.length > 0">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="paszportyDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="paszportOd">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Paszport od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.paszportOd | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="paszportDo">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Paszport do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.paszportDo | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nrPaszportu">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Numer paszportu
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.nrPaszportu }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiKP">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiKP"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editPaszporty(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deletePaszporty(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="paszportyKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: paszportyKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="paszportyGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="paszporty">
+              <mat-expansion-panel-header>
+                <b>Dodaj paszport</b>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <input matInput type="date" formControlName="paszportypaszportOd" placeholder="Paszport od"
+                  value="{{ paszportyGroup.value.kartyPobytukartaOd | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="paszportypaszportDo" placeholder="Paszport do"
+                  value="{{ paszportyGroup.value.kartyPobytukartaDo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="paszportynrPaszportu" placeholder="Numer paszportu" />
+              </mat-form-field>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikupaszporty.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikupaszporty" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker (change)="onFilesPicked($event, 'Paszporty', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addPaszporty()">
+                  Dodaj paszport
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="paszporty = !paszporty">
+                  Ukryj formatkę dodawania paszportu
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!paszporty">
+          <button mat-raised-button type="button" (click)="nextPaszporty()">
+            Dodaj paszporty
+          </button>
+        </div> -->
+
+        <!-- badania okresowe -->
+
+        <div *ngIf="
+            pracownicy.badaniaOkresowe && pracownicy.badaniaOkresowe.length > 0
+          ">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="badaniaOkresoweDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="od">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Badanie okresowe od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.od | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="do">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Badanie okresowe do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.do | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="badOkrUwagi">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Uwagi dotyczące badania
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.badOkrUwagi }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="aktualne">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Czy badanie jest aktualne?
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngIf="element.aktualne">TAK</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiBadOkr">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiBadOkr"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editBadaniaOkresowe(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteBadaniaOkresowe(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="badaniaOkresoweKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: badaniaOkresoweKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="badaniaOkresoweGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="badaniaOkresowe">
+              <mat-expansion-panel-header>
+                <b>Dodaj badanie okresowe</b>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <input matInput type="date" formControlName="badaniaOkresoweod" placeholder="Badanie okresowe od"
+                  value="{{ badaniaOkresoweGroup.value.badaniaOkresoweod | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="badaniaOkresowedo" placeholder="Badanie okresowe do"
+                  value="{{ badaniaOkresoweGroup.value.badaniaOkresowedo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="badaniaOkresowebadOkrUwagi"
+                  placeholder="Uwagi dotyczące badania" />
+              </mat-form-field>
+              <mat-checkbox (change)="badaniaOkresoweAktualne()" [checked]="badaniaOkresoweGroup.value.aktualne">
+                Aktualne?
+              </mat-checkbox>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikubadaniaOkresowe.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikubadaniaOkresowe" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker
+                      (change)="onFilesPicked($event, 'Badania okresowe', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addBadaniaOkresowe()">
+                  Dodaj badanie okresowe
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="badaniaOkresowe = !badaniaOkresowe">
+                  Ukryj formatkę dodawania badania okresowego
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!badaniaOkresowe">
+          <button mat-raised-button type="button" (click)="nextBadaniaOkresowe()">
+            Dodaj badaniaOkresowe
+          </button>
+        </div> -->
+
+        <!-- szkolenia BHP -->
+
+        <div *ngIf="pracownicy.szkoleniaBHP && pracownicy.szkoleniaBHP.length > 0">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="szkoleniaBHPDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="od">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Szkolenie BHP od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.od | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="do">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Szkolenie BHP do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.do | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="szkoleniaBhpUwagi">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Uwagi do szkolenia
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.szkoleniaBhpUwagi }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="aktualne">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Czy szkolenie jest aktualne?
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngIf="element.aktualne">TAK</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiBHP">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiBHP"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editSzkoleniaBHP(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteSzkoleniaBHP(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="szkoleniaBHPKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: szkoleniaBHPKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="szkoleniaBHPGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="szkoleniaBHP">
+              <mat-expansion-panel-header>
+                <b>Dodaj szkolenie BHP</b>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <input matInput type="date" formControlName="szkoleniaBHPod" placeholder="Szkolenie BHP od"
+                  value="{{ szkoleniaBHPGroup.value.szkoleniaBHPod | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="szkoleniaBHPdo" placeholder="Szkolenie BHP do"
+                  value="{{ szkoleniaBHPGroup.value.szkoleniaBHPdo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="szkoleniaBHPszkoleniaBhpUwagi"
+                  placeholder="Uwagi dotyczące szkolenia" />
+              </mat-form-field>
+
+              <mat-checkbox (change)="szkoleniaBHPAktualne()" [checked]="szkoleniaBHPGroup.value.aktualne">Aktualne?
+              </mat-checkbox>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikuszkoleniaBHP.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikuszkoleniaBHP" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker (change)="onFilesPicked($event, 'Szkolenia BHP', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addSzkoleniaBHP()">
+                  Dodaj szkolenie BHP
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="szkoleniaBHP = !szkoleniaBHP">
+                  Ukryj formatkę dodawania szkolenia BHP
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!szkoleniaBHP">
+          <button mat-raised-button type="button" (click)="nextSzkoleniaBHP()">
+            Dodaj szkoleniaBHP
+          </button>
+        </div> -->
+
+        <!-- dodatkowe kwalifikacje -->
+
+        <div *ngIf="
+            pracownicy.dodatkoweKwalifikacje &&
+            pracownicy.dodatkoweKwalifikacje.length > 0
+          ">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="dodatkoweKwalifikacjeDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="od">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Dodatkowe kwalifikacje od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.od | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="do">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Dodatkowe kwalifikacje do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.do | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dodKwalifUwagi">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Uwagi dotyczące kwalifikacji
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.dodKwalifUwagi }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiKwalifikacje">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiKwalifikacje"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editDodatkoweKwalifikacje(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteDodatkoweKwalifikacje(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="dodatkoweKwalifikacjeKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: dodatkoweKwalifikacjeKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="dodatkoweKwalifikacjeGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="dodatkoweKwalifikacje">
+              <mat-expansion-panel-header>
+                <b>Dodaj dodatkową kwalifikację</b>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <input matInput type="date" formControlName="dodatkoweKwalifikacjeod"
+                  placeholder="Dodatkowe kwalifikacje od"
+                  value="{{ dodatkoweKwalifikacjeGroup.value.dodatkoweKwalifikacjeod | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="dodatkoweKwalifikacjedo"
+                  placeholder="Dodatkowe kwalifikacje do"
+                  value="{{ dodatkoweKwalifikacjeGroup.value.dodatkoweKwalifikacjedo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="dodatkoweKwalifikacjedodKwalifUwagi"
+                  placeholder="Uwagi dotyczące kwalifikacji" />
+              </mat-form-field>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikudodatkoweKwalifikacje.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikudodatkoweKwalifikacje" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker
+                      (change)="onFilesPicked($event, 'Dodatkowe kwalifikacje', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addDodatkoweKwalifikacje()">
+                  Dodaj dodatkową kwalifikacje
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="dodatkoweKwalifikacje = !dodatkoweKwalifikacje">
+                  Ukryj formatkę dodawania dodatkowej kwalifikacji
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!dodatkoweKwalifikacje">
+          <button mat-raised-button type="button" (click)="nextDodatkoweKwalifikacje()">
+            Dodaj dodatkoweKwalifikacje
+          </button>
+        </div> -->
+
+        <!-- wyróżnienia i kary -->
+
+        <div *ngIf="
+            pracownicy.wyroznieniaKary && pracownicy.wyroznieniaKary.length > 0
+          ">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="wyroznieniaKaryDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="od">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Wyróżnienie/kara od
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.od | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="do">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Wyróżnienie/kara do
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.do | date: 'yyyy-MM-dd' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="wyrKarUwagi">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Uwagi dot. wyróżnień/kar
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.wyrKarUwagi }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="plikiWyrKar">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Pliki
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngFor="let plik of element.plikiWyrKar"><a
+                      href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                      target="_blank">{{ plik.name }}</a><br></span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="primary" (click)="editWyroznieniaKary(element)" type="button">
+                    Edytuj
+                  </button>
+                  <button mat-button color="warn" (click)="deleteWyroznieniaKary(element, false)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="wyroznieniaKaryKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: wyroznieniaKaryKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="itemClass" [formGroup]="wyroznieniaKaryGroup">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="wyroznieniaKary">
+              <mat-expansion-panel-header>
+                <b>Dodaj wyróżnienie/karę</b>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <input matInput type="date" formControlName="wyroznieniaKaryod" placeholder="Wyróżnienie/kara od"
+                  value="{{ wyroznieniaKaryGroup.value.wyroznieniaKaryod | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="date" formControlName="wyroznieniaKarydo" placeholder="Wyróżnienie/kara do"
+                  value="{{ wyroznieniaKaryGroup.value.wyroznieniaKarydo | date:'yyyy-MM-dd' }}" />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" formControlName="wyroznieniaKarywyrKarUwagi"
+                  placeholder=" Uwagi dot. wyróżnień/kar" />
+              </mat-form-field>
+
+              <div class="limitkred">
+                <div *ngIf="nazwaPlikuwyroznieniaKary.length > 0">
+                  <div class="tabelaDiv">
+                    Nazwa pliku <br />
+                    <span *ngFor="let plik of nazwaPlikuwyroznieniaKary" mat-cell class="klasaKolumny">
+                      <a href="{{ backendUrl }}/{{ plik.katalog }}/{{ plik.fileName }}"
+                        target="_blank">{{ plik.name }}</a>
+                      <button mat-button color="warn" (click)="deletePlikObiekt(plik)" type="button">
+                        Usuń plik
+                      </button><br>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="limitkred">
+                <form [formGroup]="formPliki" (submit)="onAddPliki()">
+                  <div class="div2b">
+                    <button mat-stroked-button type="button" (click)="filePicker.click()">
+                      Wybierz pliki
+                    </button>
+                    <input type="file" multiple #filePicker
+                      (change)="onFilesPicked($event, 'Wyróżnienia i kary', false)" />
+                  </div>
+                  <br />
+                </form>
+              </div>
+
+              <div>
+                <button mat-raised-button color="primary" type="button" (click)="addWyroznieniaKary()">
+                  Dodaj wyroznienie/karę
+                </button>
+                &nbsp;
+                <button mat-raised-button type="button" (click)="wyroznieniaKary = !wyroznieniaKary">
+                  Ukryj formatkę dodawania wyroznienia/kary
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+
+        <!-- <div class="kolejnePracownicyButt" *ngIf="!wyroznieniaKary">
+          <button mat-raised-button type="button" (click)="nextWyroznieniaKary()">
+            Dodaj wyroznieniaKary
+          </button>
+        </div> -->
+
+        <mat-form-field>
+          <textarea matInput rows="4" formControlName="uwagi" placeholder="Uwagi"></textarea>
+        </mat-form-field>
+
+        <!-- mat table Wybrane pliki -->
+
+        <div class="limitkred">
+          <div *ngIf="plikiLocal.length > 0">
+            <div class="tabelaDiv">
+              <table mat-table [dataSource]="plikiDataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                    Nazwa
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                    <a href="{{ backendUrl }}/{{ element.katalog }}/{{
+                        element.fileName
+                      }}" target="_blank">{{ element.name }}</a>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rodzaj">
+                  <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                    Typ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                    {{ element.rodzaj }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                    Akcje
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <button mat-button color="warn" (click)="deletePlik(element)" type="button">
+                      Usuń plik
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="plikiKolumny"></tr>
+                <tr mat-row *matRowDef="let row; columns: plikiKolumny"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- dodawanie plików  -->
+
+        <div class="limitkred">
+          <form [formGroup]="formPliki" (submit)="onAddPliki()">
+            <div class="div2b">
+              <mat-form-field>
+                <mat-label>Typ pliku/plików</mat-label>
+                <mat-select formControlName="typPliku">
+                  <mat-option *ngFor="let plik of dictionaries[2]?.values" value="{{ plik }}"
+                    (click)="ustawAktualnyTypPliku(plik)">{{ plik }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="div2b">
+              <button mat-stroked-button type="button" (click)="filePicker.click()">
+                Wybierz pliki
+              </button>
+              <input type="file" multiple #filePicker (change)="onFilesPicked($event, aktualnyTypPliku, true)" />
+            </div>
+            <br />
+          </form>
+        </div>
+
+        <!-- przyciski zapisz anuluj -->
+
+        <button mat-raised-button color="primary" type="submit">
+          Zapisz pracownika
+        </button>
+        &nbsp;
+        <button mat-raised-button color="primary" type="button" (click)="powrot()" *ngIf="mozliwoscAnulowania">
+          Anuluj
+        </button>
+        <button mat-raised-button color="primary" type="button" *ngIf="!mozliwoscAnulowania" disabled>
+          Anuluj
+        </button>
+      </form>
+    </mat-card>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby zapisać dane.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>

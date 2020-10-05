@@ -1,0 +1,37 @@
+[
+  {
+    "active": true,
+    "nazwa": "HPStal",
+    "backendPort": 5501,
+    "frontendPort": 4501,
+    "catalogFront": "dist/HPStal"
+  },
+  {
+    "active": true,
+    "nazwa": "GTSport",
+    "backendPort": 5502,
+    "frontendPort": 4502,
+    "catalogFront": "dist/GTSport"
+  },
+  {
+    "active": false,
+    "nazwa": "MLG",
+    "backendPort": 5503,
+    "frontendPort": 4503,
+    "catalogFront": "dist/MLG"
+  },
+  {
+    "active": false,
+    "nazwa": "Kodikos",
+    "backendPort": 5504,
+    "frontendPort": 4504,
+    "catalogFront": "dist/Kodikos"
+  },
+  {
+    "active": false,
+    "nazwa": "MirPib",
+    "backendPort": 5505,
+    "frontendPort": 4505,
+    "catalogFront": "dist/MirPib"
+  }
+]

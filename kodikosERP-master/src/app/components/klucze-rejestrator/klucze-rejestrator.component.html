@@ -1,0 +1,38 @@
+<div class="formularz" [ngClass]="{bezMyszy: pelny}">
+  <form [formGroup]="form" (submit)="onSave()">
+    <input id="nrKart" type="text" formControlName="numerRFID" />
+  </form>
+</div>
+
+<div id="kontener" (click)="focusPole()" [ngClass]="{bezMyszy: pelny}">
+
+  <div *ngIf="!pelny" class="rejestracjaHtml1">
+    <button mat-raised-button color="accent" (click)="openFullScreen()" id="startRej">Rozpocznij rejestrację</button>
+  </div>
+
+  <div class="rejestracjaHtml">
+    <mat-card class="wynikiCardImie" *ngIf="aktywnaKarta.imie != null && pelny">
+      <div class="tytul">
+        {{ aktywnaKarta.imie }}
+      </div>
+      <div>
+        <mat-list *ngIf="wydaneKlucze.length > 0">
+          <mat-list-item *ngFor="let numerKlucza of wydaneKlucze" style="color: white">
+            <span class="numerKlucza">{{ numerKlucza }}</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </mat-card>
+
+    <mat-card class="wynikiCard" *ngIf="!aktywnaKarta.imie && pelny">
+      <div class="tytul">
+        <p style="color: white">WYDAWANIE KLUCZY<br />
+          <i class="material-icons">
+            vpn_key
+          </i>
+          <br />ZESKANUJ KARTĘ</p>
+      </div>
+    </mat-card>
+  </div>
+
+</div>

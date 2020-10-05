@@ -1,0 +1,179 @@
+<main>
+  <span *ngIf="userIsAuthenticated">
+    <div id="menu">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu"
+          >STRONA GŁÓWNA</mat-button-toggle
+        >
+        <mat-button-toggle routerLink="/lazy/order"
+          >Zamówienia</mat-button-toggle
+        >
+        <mat-button-toggle class="imhere"
+          ><b>Dodaj zamówienie</b></mat-button-toggle
+        >
+        <mat-button-toggle (click)="logout()"
+          >{{ loggedInUser.name }} {{ loggedInUser.surname }}</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+    </div>
+
+    <mat-card>
+      <!-- template driven form -->
+      <form (submit)="onSaveOrder(orderCreateForm)" #orderCreateForm="ngForm">
+        <button mat-raised-button color="primary" type="submit">
+          Zapisz zamówienie
+        </button>
+        &nbsp;
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          (click)="powrot()"
+        >
+          Anuluj
+        </button>
+        <h4>Szczegóły zamówienia</h4>
+
+        <mat-form-field>
+          <input
+            matInput
+            type="date"
+            name="data"
+            [ngModel]="order?.data | date: 'yyyy-MM-dd'"
+            placeholder="data"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="creator"
+            [ngModel]="order?.creator"
+            placeholder="sporządził"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="termsOfPayment"
+            [ngModel]="order?.termsOfPayment"
+            placeholder="warunki płatności"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="deliveryType"
+            [ngModel]="order?.deliveryType"
+            placeholder="warunki dostawy"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="labelling"
+            [ngModel]="order?.labelling"
+            placeholder="znakowanie"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="packing"
+            [ngModel]="order?.packing"
+            placeholder="pakowanie"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="certificate"
+            [ngModel]="order?.certificate"
+            placeholder="certyfikat"
+          />
+        </mat-form-field>
+
+        <!-- <mat-form-field>
+            <input matInput type="text" name="realization" [ngModel]="order?.realization" placeholder="wykonanie" />
+          </mat-form-field> -->
+
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="engeneeringTolerance"
+            [ngModel]="order?.engeneeringTolerance"
+            placeholder="tolerancja wykonania"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="origin"
+            [ngModel]="order?.origin"
+            placeholder="pochodzenie towaru"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <textarea
+            matInput
+            rows="4"
+            [ngModel]="order?.comments"
+            name="comments"
+            placeholder="uwagi"
+          ></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button disabled>
+          Dodaj pozycję z asortymentu
+        </button>
+
+        <br /><br />
+
+        <button mat-raised-button color="primary" type="submit">
+          Zapisz zamówienie
+        </button>
+        &nbsp;
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          (click)="powrot()"
+        >
+          Anuluj
+        </button>
+      </form>
+    </mat-card>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle
+          >Zaloguj się do systemu aby zapisać dane.</mat-card-subtitle
+        >
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>

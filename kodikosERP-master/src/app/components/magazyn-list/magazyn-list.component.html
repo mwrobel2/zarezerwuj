@@ -1,0 +1,329 @@
+<main>
+  <!-- <span *ngIf="userIsAuthenticated"> -->
+  <span>
+    <div id="menu">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+        <mat-button-toggle class="imhere"><b>Magazyny</b></mat-button-toggle>
+        <mat-button-toggle routerLink="/warehousecreate" *ngIf="dispFields.buttonDodajKontr">Dodaj towar
+        </mat-button-toggle>
+        <mat-button-toggle (click)="logout()">{{ this.loggedInUser.name }} {{ this.loggedInUser.surname }}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <div class="searchClass">
+      <form (submit)="onSearchWarehouse(warehouseSearchForm)" #warehouseSearchForm="ngForm" class="searchForm">
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">Kod - Indeks</mat-placeholder>
+          <input matInput type="text" name="itemNumber" [(ngModel)]="warehouse.itemNumber" />
+        </mat-form-field>
+        &nbsp;
+
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">Nazwa towaru</mat-placeholder>
+          <input matInput type="text" name="fullName" [(ngModel)]="warehouse.fullName" />
+        </mat-form-field>
+        &nbsp;
+
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">Rodzaj</mat-placeholder>
+          <input matInput type="text" name="rodzajTowaru" [(ngModel)]="warehouse.rodzajTowaru" />
+        </mat-form-field>
+        &nbsp;
+
+        <mat-form-field class="formfiel" *ngIf="dispFields.comments">
+          <mat-placeholder class="placclass">Uwagi</mat-placeholder>
+          <input matInput type="text" name="comments" [(ngModel)]="warehouse.comments" />
+        </mat-form-field>
+        &nbsp;
+
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">Magazyn</mat-placeholder>
+          <input matInput type="text" name="warehouseLocation" [(ngModel)]="warehouse.warehouseLocation" />
+        </mat-form-field>
+
+        <button mat-raised-button type="submit">
+          Szukaj
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="clearForm(warehouseSearchForm)">
+          Wyczyść
+        </button>
+      </form>
+    </div>
+
+    <mat-spinner *ngIf="isLoading" class="spin"></mat-spinner>
+    <mat-accordion multi="true" *ngIf="warehouses.length > 0 && !isLoading">
+      <mat-expansion-panel *ngFor="let warehouse of warehouses">
+
+        <mat-expansion-panel-header>
+          <div id="dispHeader">
+            <span id="spanNazwa">
+              &nbsp;
+              <b>{{ warehouse.fullName | uppercase }}</b>
+
+              <span *ngIf="warehouse.itemNumber">
+                &nbsp; ({{ warehouse.itemNumber }})
+              </span>
+              <span *ngIf="warehouse.liczba">
+                &nbsp; {{ warehouse.liczba }} {{ warehouse.jednostka }}
+              </span>
+            </span>
+            <span id="spanSpacer"></span>
+            <span class="spanMenu">{{ warehouse.rodzajTowaru }}</span>
+          </div>
+        </mat-expansion-panel-header>
+
+        <div id="dispContent">
+          <div id="infoBasic">
+            <div>
+              <!-- <div class="inonerow2">
+                <div>{{ warehouse.fullName }}</div>
+                <div *ngIf="warehouse.liczba">({{ warehouse.liczba }} {{ warehouse.jednostka }})</div>
+              </div> -->
+              <div class="odstep3">
+              <b>{{ warehouse.fullName }}</b>
+            </div>
+            <div class="odstep3" *ngIf="warehouse.itemNumber">
+              Index: {{ warehouse.itemNumber }}
+            </div>
+              <div class="odstep3">
+                <span *ngIf="warehouse.rodzajTowaru">Rodzaj: {{ warehouse.rodzajTowaru }}</span>
+              </div>
+              <div class="odstep3">
+                <span *ngIf="warehouse.dlugosc">
+                  długość: {{ warehouse.dlugosc}}
+                </span>
+                <span *ngIf="warehouse.wysokosc">
+                  &nbsp;wysokość: {{ warehouse.wysokosc}}
+                </span>
+                <span *ngIf="warehouse.szerokosc">
+                  &nbsp;szerokośc: {{ warehouse.szerokosc}}
+                </span>
+              </div>
+
+              <div class="odstep3">
+                <span *ngIf="warehouse.gatunek">
+                  gatunek: {{ warehouse.gatunek}}
+                </span>
+                <span *ngIf="warehouse.atest">
+                  &nbsp;atest: {{ warehouse.atest}}
+                </span>
+                <span *ngIf="warehouse.odbior">
+                  &nbsp;odbiór: {{ warehouse.odbior}}
+                </span>
+              </div>
+
+              <div>
+                <span *ngIf="warehouse.cenaDetalicznaNetto">
+                  cena detal netto: <b>{{ warehouse.cenaDetalicznaNetto}}</b> {{ warehouse.cenaDetalicznaWaluta }}
+                </span>
+                <span *ngIf="warehouse.cenaDetalicznaBrutto">
+                  &nbsp;cena detal brutto: <b>{{ warehouse.cenaDetalicznaBrutto }}</b>
+                  {{ warehouse.cenaDetalicznaWaluta }}
+                </span>
+              </div>
+              <div>
+                <span *ngIf="warehouse.cenaHurtowaSprzedazyNetto">
+                  cena hurt netto: <b>{{ warehouse.cenaHurtowaSprzedazyNetto}}</b> {{ warehouse.cenaDetalicznaWaluta }}
+                </span>
+                <span *ngIf="warehouse.cenaHurtowaSprzedazyBrutto">
+                  &nbsp;cena hurt brutto: <b>{{ warehouse.cenaHurtowaSprzedazyBrutto }}</b>
+                  {{ warehouse.cenaDetalicznaWaluta }}
+                </span>
+              </div>
+              <div *ngIf="warehouse.vat" class="odstep3">
+                Stawka VAT: {{ warehouse.vat }}%
+              </div>
+
+              <div class="odstep3">
+                <span *ngIf="warehouse.cenaZakupuNetto">
+                  cena zakupu netto: {{ warehouse.cenaZakupuNetto}}
+                </span>
+                <span *ngIf="warehouse.cenaZakupuBrutto">
+                  &nbsp;cena zakupu brutto: {{ warehouse.cenaZakupuBrutto }}
+                </span>
+              </div>
+
+              <!-- <span *ngIf="warehouse.itemNumber">Kod - Indeks: <b>{{ warehouse.itemNumber }}</b><br /></span> -->
+              <div class="odstep3 towar" *ngIf="warehouse.widocznyWSklepie">
+                <b>Towar jest widoczny w sklepie internetowym</b>
+              </div>
+
+
+              <div class="odstep3">
+                <span *ngIf="warehouse.warehouseLocation">
+                  Magazyn: <b>{{ warehouse.warehouseLocation }}</b><br /></span>
+                <div class="inonerow2">
+                  <span *ngIf="warehouse.regal">Regał: <b>{{ warehouse.regal }}</b><br /></span>
+                  <span *ngIf="warehouse.polka">&nbsp;Półka: <b>{{ warehouse.polka }}</b><br /></span>
+                  <span *ngIf="warehouse.karton">&nbsp;Karton: <b>{{ warehouse.karton }}</b><br /></span>
+                </div>
+                <div *ngIf="warehouse.barcode">
+                  Kod QR/Barcode: {{ warehouse.barcode }}
+                </div>
+              </div>
+
+              <div class="odstep3" *ngIf="warehouse.cenaExportEuro">
+                Cena export Euro: {{ warehouse.cenaExportEuro }}
+              </div>
+
+              <div class="odstep3" *ngIf="warehouse.supplier">
+                Dostawca: {{ warehouse.supplier }}
+              </div>
+
+            </div>
+
+            <div class="fullWidth" *ngIf="warehouse.towarOpis">
+              <p>
+                SZCZEGÓŁY TOWARU:<br />
+                <b>{{ warehouse.towarOpis }}</b>
+              </p>
+            </div>
+
+            <div class="fullWidth" *ngIf="warehouse.comments">
+              <p>
+                UWAGI:<br />
+                <b>{{ warehouse.comments }}</b>
+              </p>
+            </div>
+
+            <span *ngIf="warehouse.pliki.length > 0 && dispFields.pliki">
+              <div>
+                <p>PLIKI: <br /></p>
+
+                <div *ngIf="warehouse.pliki[0].name" class="tabelaDiv">
+                  <table mat-table [dataSource]="warehouse.pliki" class="mat-elevation-z8">
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                        Nazwa
+                      </th>
+                      <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                        <a href="{{ backendUrl }}/{{ element.katalog }}/{{ element.fileName }}" target="_blank">{{ element.name }}
+                        </a>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rodzaj">
+                      <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                        Typ
+                      </th>
+                      <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                        {{ element.rodzaj }}
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="plikiKolumny"></tr>
+                    <tr mat-row *matRowDef="let row; columns: plikiKolumny"></tr>
+                  </table>
+                </div>
+              </div>
+            </span>
+
+            <!-- firmy -->
+
+            <div *ngIf="warehouse.firms && warehouse.firms.length > 0 && dispFields.firmy">
+              <br />
+              Firmy:
+              <ul>
+                <li *ngFor="let firma of warehouse.firms">{{ firma }}</li>
+              </ul>
+            </div>
+
+            <!-- projekty -->
+
+            <div *ngIf="warehouse.projects && warehouse.projects.length > 0 && dispFields.projekty">
+              <br />
+              Projekty:
+              <ul>
+                <li *ngFor="let projekt of warehouse.projects">{{ projekt }}</li>
+              </ul>
+            </div>
+
+            <!-- zmodyfikowany, dodany przez -->
+
+            <div class="padZero searchForm" *ngIf="warehouse.addBy.name">
+              Dodany przez:
+              {{ warehouse.addBy.name }} {{ warehouse.addBy.surname }} -
+              {{ warehouse.addDate | date: "dd.MM.yyyy HH:mm:ss" }}
+            </div>
+            <div class="padZero" *ngIf="warehouse.modBy.name">
+              Zmodyfikowany przez:
+              {{ warehouse.modBy.name }} {{ warehouse.modBy.surname }} -
+              {{ warehouse.modDate | date: "dd.MM.yyyy HH:mm:ss" }}
+            </div>
+
+          </div>
+          <!-- koniec info basic -->
+
+          <!-- poniżej wyświetlanie zdjęcia -->
+          <div class="kolumnaZdjecie" *ngIf="warehouse.pliki.length > 0 && dispFields.pliki && warehouse.pliki[0].name">
+            <ul *ngFor="let zd of warehouse.pliki">
+              <li *ngIf="zd.rodzaj == 'MainPhoto'">
+                <a href="{{ backendUrl }}/{{ zd.katalog }}/{{ zd.fileName }}" target="_blank" class="ramka">
+                  <img src="{{ backendUrl }}/{{ zd.katalog }}/{{
+                              zd.fileName
+                            }}" width="290px" />
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+
+
+        <!-- przyciski -->
+
+        <mat-action-row>
+          <button mat-button color="primary" (click)="utworzNaWzor(warehouse.id)">
+            Dodaj podobny
+          </button>
+          <button mat-button color="primary" *ngIf="dispFields.buttonEdytujKontr"
+            [routerLink]="['/warehouseedit', warehouse.id]">
+            Edytuj
+          </button>
+          <button mat-button color="warn" *ngIf="dispFields.buttonUsunKontr"
+            (click)="onDelete(warehouse.id, warehouse.pliki)">
+            Usuń
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <mat-paginator *ngIf="warehouses.length > 0" id="topPag" [length]="totalWarehouses" [pageSize]="warehousePerPage"
+      [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)" class="pagbottom">
+    </mat-paginator>
+
+    <div id="carddiv" *ngIf="warehouses.length <= 0">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Brak Danych</mat-card-title>
+        </mat-card-header>
+        <mat-card-actions>
+          <!-- <button mat-raised-button color="primary" (click)="powrot()">
+              Powrót
+            </button>
+            <button mat-raised-button color="primary" *ngIf="dispFields.buttonDodajKontr" routerLink="/warehousecreate">
+              Dodaj substancję
+            </button> -->
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby odczytać dane.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>

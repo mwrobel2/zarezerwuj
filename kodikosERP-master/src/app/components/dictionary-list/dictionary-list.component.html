@@ -1,0 +1,93 @@
+<main>
+  <span *ngIf="userIsAuthenticated">
+    <div id="menu">
+
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+        <mat-button-toggle routerLink="/lazy/admin">Administracja</mat-button-toggle>
+        <mat-button-toggle class="imhere">Słowniki</mat-button-toggle>
+        <mat-button-toggle (click)="logout()">
+          {{ loggedInUser.name }} {{ loggedInUser.surname }}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <mat-paginator id="topPag" [length]="totalDictionaries" [pageSize]="dictionariesPerPage"
+      [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)">
+    </mat-paginator>
+    <mat-accordion multi="true" *ngIf="dictionaries.length > 0">
+      <mat-expansion-panel *ngFor="let dictionary of dictionaries">
+        <mat-expansion-panel-header>
+          <div id="dispHeader">
+            <span id="spanNazwa">
+              <b>{{ dictionary.description | uppercase }}</b>
+            </span>
+            <span id="spanSpacer"></span>
+          </div>
+        </mat-expansion-panel-header>
+
+        <div id="dispContent">
+          <div id="infoBasic">
+            <p *ngFor="let value of dictionary.values">
+              <b>{{ value }}</b>
+            </p>
+          </div>
+        </div>
+
+        <!-- <div id="dispComments">
+          <p>
+            <b>OPIS:</b><br />
+            {{ dictionary.description }}
+          </p>
+        </div> -->
+        <mat-action-row>
+          <button mat-button color="primary" [routerLink]="['/dictedit', dictionary.id]">
+            Edytuj
+          </button>
+          <!-- <button mat-button color="warn" (click)="onDelete(dictionary.id)">
+            Usuń
+          </button> -->
+        </mat-action-row>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <mat-paginator id="bottomPag" [length]="totalDictionaries" [pageSize]="dictionariesPerPage"
+      [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)">
+    </mat-paginator>
+
+    <div id="carddiv" *ngIf="dictionaries.length <= 0">
+      <mat-card class=" example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Brak Danych</mat-card-title>
+          <mat-card-subtitle>Brak słowników.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="powrot()">
+            Powrót
+          </button>
+          <!-- <button
+            mat-raised-button
+            color="primary"
+            routerLink="/dictcreate"
+          >
+            Dodaj słownik
+          </button> -->
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby odczytać dane.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>

@@ -1,0 +1,166 @@
+<div id="menu" *ngIf="userIsAuthenticated">
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+    <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+    <mat-button-toggle routerLink="/lazy/admin">Administracja</mat-button-toggle>
+    <mat-button-toggle class="imhere">Edytuj Formatki</mat-button-toggle>
+    <mat-button-toggle (click)="logout()">
+      {{ loggedInUser.name }} {{ loggedInUser.surname }}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+
+<div class="container1">
+
+  <mat-card class="card1" *ngIf="showKontrahenci">
+    <mat-card-header>
+      <!-- <mat-card-title>Administracja</mat-card-title> -->
+      <mat-card-subtitle>Kontakty - Administracja</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        people_outline
+      </i>
+    </mat-card-content>
+    <!-- <div class="vspacer"></div> -->
+    <mat-card-actions>
+      <button mat-button routerLink="/lazy/kontrahenciform">KONTAKTY</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showTowary">
+    <mat-card-header>
+      <!-- <mat-card-title>Administracja</mat-card-title> -->
+      <mat-card-subtitle>Magazyny - Administracja</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        domain
+      </i>
+    </mat-card-content>
+    <!-- <div class="vspacer"></div> -->
+    <mat-card-actions>
+      <button mat-button routerLink="#" disabled>MAGAZYNY</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showAsortyment">
+    <mat-card-header>
+      <!-- <mat-card-title>Administracja</mat-card-title> -->
+      <mat-card-subtitle>Asortyment - Administracja</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        layers
+      </i>
+    </mat-card-content>
+    <!-- <div class="vspacer"></div> -->
+    <mat-card-actions>
+      <button mat-button routerLink="#" disabled>ASORTYMENT</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showPracownicy">
+    <mat-card-header>
+      <!-- <mat-card-title>Administracja</mat-card-title> -->
+      <mat-card-subtitle>Pracownicy - Administracja</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        accessibility_new
+      </i>
+    </mat-card-content>
+    <!-- <div class="vspacer"></div> -->
+    <mat-card-actions>
+      <button mat-button routerLink="#" disabled>PRACOWNICY</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showOferty">
+    <mat-card-header>
+      <mat-card-subtitle>Oferty - Administracja</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        contact_mail
+      </i>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button routerLink="#" disabled>OFERTY</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showZamowienia">
+    <mat-card-header>
+      <mat-card-subtitle>Zamówienia - Administracja</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        assignment
+      </i>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button routerLink="#" disabled>ZAMÓWIENIA</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showListawydan">
+    <mat-card-header>
+      <mat-card-subtitle>Lista wydań - Administracja</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        assignment_turned_in
+      </i>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button disabled>LISTA WYDAŃ</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showFaktury">
+    <mat-card-header>
+      <mat-card-subtitle>Faktury - Administracja</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        money
+      </i>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button routerLink="#" disabled>FAKTURY</button>
+    </mat-card-actions>
+  </mat-card>
+
+
+
+  <!-- <br><br><br>
+  <button routerLink="/login">Zaloguj się</button>
+  <br /> -->
+  <!-- <button routerLink="/lazy/admin">Administracja</button> -->
+
+  <!-- <br /> -->
+  <!-- <button routerLink="/signup">Dodj usera</button>
+    <br /> -->
+  <!-- <button routerLink="/contractorslist">Kontrahenci</button>
+  <br /> -->
+  <!-- <button routerLink="/warehouselist">Magazyn</button>
+  <br /> -->
+  <!-- <button routerLink="/lazy/assortment">Asortyment</button> -->
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby przejść do głównego
+          menu.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

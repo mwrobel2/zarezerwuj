@@ -1,0 +1,224 @@
+<main>
+  <!-- <span *ngIf="userIsAuthenticated"> -->
+  <span>
+    <div id="menu">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+        <mat-button-toggle class="imhere"><b>Przesyłki</b></mat-button-toggle>
+        <mat-button-toggle routerLink="/rrwmodule/przesylkiadd" *ngIf="dispFields.buttonDodajKontr">Dodaj przesyłkę
+        </mat-button-toggle>
+        <mat-button-toggle (click)="logout()">{{ this.loggedInUser.name }} {{ this.loggedInUser.surname }}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <div class="searchClass">
+      <form (submit)="onSearchPrzesylki(przesylkiSearchForm)" #przesylkiSearchForm="ngForm" class="searchForm">
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">nazwa firmy</mat-placeholder>
+          <input matInput type="text" name="nazwaPelna" [(ngModel)]="przesylka.fullName" />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">nr zapotrzebowania</mat-placeholder>
+          <input matInput type="text" name="nrZapotrzebowania" [(ngModel)]="przesylka.nrZapotrzebowania" />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">odbiorca</mat-placeholder>
+          <input matInput type="text" name="doKogo" [(ngModel)]="przesylka.doKogo" />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field class="formfiel" *ngIf="dispFields.comments">
+          <mat-placeholder class="placclass">uwagi</mat-placeholder>
+          <input matInput type="text" name="comments" [(ngModel)]="przesylka.comments" />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field class="formfiel" *ngIf="dispFields.status">
+          <mat-placeholder class="placclass">status</mat-placeholder>
+          <input matInput type="text" name="status" [(ngModel)]="przesylka.status" />
+        </mat-form-field>
+        <button mat-raised-button type="submit">
+          Szukaj
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="clearForm(przesylkiSearchForm)">
+          Wyczyść
+        </button>
+      </form>
+    </div>
+
+    <mat-spinner *ngIf="isLoading" class="spin"></mat-spinner>
+
+    <mat-accordion multi="true" *ngIf="przesylki.length > 0 && !isLoading">
+      <mat-expansion-panel *ngFor="let przesylka of przesylki">
+        <mat-expansion-panel-header>
+          <div id="dispHeader">
+            <span id="spanNazwa" *ngIf="przesylka.status === 'odebrana przez zamawiającego'">
+              <b>{{ przesylka.fullName | uppercase }}</b>
+            </span>
+            <span id="spanNazwa" *ngIf="przesylka.status === 'w sekretariacie MIR-PIB'" style="color:green">
+              <b>{{ przesylka.fullName | uppercase }}</b>
+            </span>
+            <span id="spanNazwa" *ngIf="przesylka.status === 'oczekuje na doręczenie'" style="color:orangered">
+              <b>{{ przesylka.fullName | uppercase }}</b>
+            </span>
+
+              <span *ngIf="przesylka.doKogo">&nbsp; &#8741; {{ przesylka.doKogo }}</span>
+
+            <span id="spanSpacer"></span>
+            <span class="spanMenu">{{ przesylka.status }}</span>
+          </div>
+        </mat-expansion-panel-header>
+        <div id="dispContent">
+          <div id="infoBasic">
+
+            <div>
+              <p>
+                <span *ngIf="przesylka.status">Status przesyłki: <b>{{ przesylka.status }}</b><br></span>
+                <span *ngIf="przesylka.fullName">Nazwa firmy: <b>{{ przesylka.fullName }}</b><br></span>
+                <span *ngIf="przesylka.doKogo">Odbiorca: <b>{{ przesylka.doKogo }}</b><br></span>
+                <span *ngIf="przesylka.nrZapotrzebowania">Numer zapotrzebowania:
+                  <b>{{ przesylka.nrZapotrzebowania }}</b><br></span>
+                <span *ngIf="przesylka.rodzajPlatnosci">Typ płatności: <b>{{ przesylka.rodzajPlatnosci }}</b><br></span>
+                <span *ngIf="przesylka.kwota">Kwota (wartość przesyłki): <b>{{ przesylka.kwota }}</b><br></span>
+              </p>
+            </div>
+
+
+            <div class="fullWidth" *ngIf="przesylka.comments">
+              <p>
+                UWAGI:<br />
+                <b>{{ przesylka.comments }}</b>
+              </p>
+            </div>
+
+            <!-- firmy -->
+
+            <div *ngIf="przesylka.firms && przesylka.firms.length > 0 && dispFields.firmy">
+              <br>
+              <b>Firmy:</b>
+              <ul>
+                <li *ngFor="let firma of przesylka.firms">{{ firma }}</li>
+              </ul>
+            </div>
+
+            <!-- projekty -->
+
+            <div *ngIf="przesylka.projects && przesylka.projects.length > 0 && dispFields.projekty">
+              <br>
+              <b>Projekty:</b>
+              <ul>
+                <li *ngFor="let projekt of przesylka.projects">{{ projekt }}</li>
+              </ul>
+            </div>
+
+
+
+
+            <span *ngIf="przesylka.pliki.length > 0 && dispFields.pliki">
+              <div>
+                <p>PLIKI:
+                  <br />
+                <div *ngIf="przesylka.pliki[0].name" class="tabelaDiv">
+                  <table mat-table [dataSource]="przesylka.pliki" class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Nazwa</th>
+                      <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                        <a href="{{backendUrl}}/{{ element.katalog }}/{{element.fileName}}"
+                          target="_blank">{{ element.name }}</a>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="rodzaj">
+                      <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Typ</th>
+                      <td mat-cell *matCellDef="let element" class="klasaKolumny">{{ element.rodzaj }}</td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="plikiKolumny"></tr>
+                    <tr mat-row *matRowDef="let row; columns: plikiKolumny"></tr>
+                  </table>
+                </div>
+              </div>
+            </span>
+
+
+            <!-- zmodyfikowany, dodany przez -->
+
+            <div class="fullWidth" *ngIf="przesylka.addBy.name">
+              <p>
+                Dodany przez:
+                <b>
+                  {{ przesylka.addBy.name }} {{ przesylka.addBy.surname }} -
+                  {{ przesylka.addDate | date: 'dd.MM.yyyy HH:mm:ss' }}
+                </b>
+              </p>
+            </div>
+            <div class="fullWidth" *ngIf="przesylka.modBy.name">
+              <p>
+                Zmodyfikowany przez:
+                <b>
+                  {{ przesylka.modBy.name }} {{ przesylka.modBy.surname }} -
+                  {{ przesylka.modDate | date: 'dd.MM.yyyy HH:mm:ss' }}
+                </b>
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- przyciski -->
+
+        <mat-action-row>
+          <button mat-button color="primary" *ngIf="dispFields.buttonEdytujKontr"
+            [routerLink]="['/rrwmodule/przesylkiedit', przesylka.id]">
+            Edytuj
+          </button>
+          <button mat-button color="warn" *ngIf="dispFields.buttonUsunKontr"
+            (click)="onDelete(przesylka.id, przesylka.pliki)">
+            Usuń
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <mat-paginator *ngIf="przesylki.length > 0" id="topPag" [length]="totalPrzesylki" [pageSize]="przesylkiPerPage"
+      [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)" class="pagbottom">
+    </mat-paginator>
+
+    <div id="carddiv" *ngIf="przesylki.length <= 0">
+      <mat-card class=" example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Brak Danych</mat-card-title>
+          <mat-card-subtitle>W bazie nie ma jeszcze informacji o przesyłkach.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="powrot()">
+            Powrót
+          </button>
+          <button mat-raised-button color="primary" *ngIf="dispFields.buttonDodajKontr"
+            routerLink="/rrwmodule/przesylkiadd">
+            Dodaj przesyłkę
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby odczytać dane.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>

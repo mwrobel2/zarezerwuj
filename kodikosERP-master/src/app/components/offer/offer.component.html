@@ -1,0 +1,251 @@
+<!-- <app-menu></app-menu> -->
+<main>
+  <!-- <span *ngIf="userIsAuthenticated"> -->
+      <span>
+    <div id="menu">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+        <mat-button-toggle class="imhere"><b>Oferty</b></mat-button-toggle>
+        <mat-button-toggle routerLink="/lazy/offercreate">Utwórz ofertę</mat-button-toggle>
+        <mat-button-toggle (click)="logout()"></mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <div class="searchClass">
+      <form (submit)="onSearchOffer(offerSearchForm)" #offerSearchForm="ngForm" class="searchForm">
+        &nbsp;
+        <mat-form-field class="formfiel" *ngIf="dispFields.contractorShortName">
+          <mat-placeholder class="placclass">krótka nazwa</mat-placeholder>
+          <input matInput type="text" name="nazwaKrotka" [(ngModel)]="offer.contractor.shortName" />
+        </mat-form-field>
+        &nbsp;
+        <!-- <mat-form-field class="formfiel" *ngIf="dispFields.contractorFullName">
+          <mat-placeholder class="placclass">pełna nazwa</mat-placeholder>
+          <input matInput type="text" name="nazwaPelna" [(ngModel)]="offer.contractor.fullName" />
+        </mat-form-field>
+        &nbsp; -->
+        <mat-form-field class="formfiel" *ngIf="dispFields.contractorNIP">
+          <mat-placeholder class="placclass">NIP</mat-placeholder>
+          <input matInput type="text" name="nip" [(ngModel)]="offer.contractor.nip" />
+        </mat-form-field>
+        &nbsp;
+        <button mat-raised-button type="submit">
+          Szukaj
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="clearForm(offerSearchForm)">
+          Wyczyść
+        </button>
+      </form>
+    </div>
+
+    <mat-spinner *ngIf="isLoading" class="spin"></mat-spinner>
+
+    <mat-accordion multi="true" *ngIf="offers.length > 0">
+      <mat-expansion-panel *ngFor="let offer of offers">
+        <mat-expansion-panel-header>
+          <div class="matTableDiv">
+            <span id="spanNazwa">
+              <b>{{ offer.contractor.shortName }} &nbsp; ({{ offer.creator | uppercase }})</b>
+            </span>
+            <span id="spanSpacer"></span>
+          </div>
+        </mat-expansion-panel-header>
+        <div id="dispContent">
+          <div id="infoBasic">
+            <p>
+              <b>{{ offer.contractor.shortName }}</b><br>
+              <b>{{ offer.contractor.fullName}}</b><br>
+              <b>NIP: {{ offer.contractor.nip }}</b><br><br>
+              <b>Sporządził: {{ offer.creator }}</b><br />
+              <b>Warunki płatności:</b> {{ offer.termsOfPayment }}<br />
+              <b>Warunki dostawy:</b>{{ offer.deliveryType }}<br />
+              <b>Znakowanie:</b> {{ offer.labelling }} <b>Pakowanie:</b>
+              {{ offer.packing }}
+            </p>
+
+            <span>
+              <mat-accordion>
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    Dane szczegółowe
+                  </mat-expansion-panel-header>
+                  <p><b>Atest:</b> {{ offer.certificate }}</p>
+                  <p>
+                    <b>Tolerancja wykonania:</b>
+                    {{ offer.engeneeringTolerance }}
+                  </p>
+                  <p><b>Pochodzenie towaru:</b> {{ offer.origin }}</p>
+                  <p><b>Waluta:</b> {{ offer.currency }}</p>
+                  <p><b>Projekt:</b> {{ offer.project }}</p>
+                  <p><b>Firma:</b> {{ offer.company }}</p>
+                  <p><b>Uwagi:</b> {{ offer.comments }}</p>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </span>
+            <br>
+            <div class="fullWidth" *ngIf="offer.addBy.name">
+              <p>
+                Oferta dodana przez:
+                <b>
+                  {{ offer.addBy.name }} {{ offer.addBy.surname }} -
+                  {{ offer.addDate | date: 'dd.MM.yyyy HH:mm:ss' }}
+                </b>
+              </p>
+            </div>
+            <div class="fullWidth" *ngIf="offer.modBy.name">
+              <p>
+                Oferta zmodyfikowana przez:
+                <b>
+                  {{ offer.modBy.name }} {{ offer.modBy.surname }} -
+                  {{ offer.modDate | date: 'dd.MM.yyyy HH:mm:ss' }}
+                </b>
+              </p>
+            </div>
+
+          </div>
+        </div>
+        <mat-action-row>
+          <button mat-button color="primary" [routerLink]="['/lazy/offeredit', offer.id]">
+            Edytuj
+          </button>
+          <button mat-button color="warn" (click)="onDelete(offer.id)">
+            Usuń
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <!-- <div class="matTableDiv" *ngIf="offers.length > 0">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="data">
+          <th mat-header-cell *matHeaderCellDef>Data</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.data | date: 'dd.MM.yyyy' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="creator">
+          <th mat-header-cell *matHeaderCellDef>Sporządził</th>
+          <td mat-cell *matCellDef="let element">{{ element.creator }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="termsOfPayment">
+          <th mat-header-cell *matHeaderCellDef>Warunki płatności</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.termsOfPayment }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="deliveryType">
+          <th mat-header-cell *matHeaderCellDef>Warunki dostawy</th>
+          <td mat-cell *matCellDef="let element">{{ element.deliveryType }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="labelling">
+          <th mat-header-cell *matHeaderCellDef>Znakowanie</th>
+          <td mat-cell *matCellDef="let element">{{ element.labelling }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="packing">
+          <th mat-header-cell *matHeaderCellDef>Pakowanie</th>
+          <td mat-cell *matCellDef="let element">{{ element.packing }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="certificate">
+          <th mat-header-cell *matHeaderCellDef>Atest</th>
+          <td mat-cell *matCellDef="let element">{{ element.certificate }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="realization">
+          <th mat-header-cell *matHeaderCellDef> Wykonanie </th>
+          <td mat-cell *matCellDef="let element"> {{element.realization}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="engeneeringTolerance">
+          <th mat-header-cell *matHeaderCellDef>Tolerancja wykonania</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.engeneeringTolerance }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="origin">
+          <th mat-header-cell *matHeaderCellDef>Poczodzenie towaru</th>
+          <td mat-cell *matCellDef="let element">{{ element.origin }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="comments">
+          <th mat-header-cell *matHeaderCellDef>Uwagi</th>
+          <td mat-cell *matCellDef="let element">{{ element.comments }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Akcje</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-action-row>
+              <button
+                mat-button
+                color="primary"
+                [routerLink]="['/lazy/offeredit', element.id]"
+              >
+                Edytuj
+              </button>
+              <button mat-button color="warn" (click)="onDelete(element.id)">
+                Usuń
+              </button>
+            </mat-action-row>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div> -->
+
+    <!-- <mat-paginator id="topPag" [length]="totalAssortments" [pageSize]="assortmentsPerPage"
+      [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)" *ngIf="assortments.length > 0">
+    </mat-paginator>
+
+    <mat-paginator id="bottomPag" [length]="totalAssortments" [pageSize]="assortmentsPerPage"
+      [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)" *ngIf="assortments.length > 0">
+    </mat-paginator> -->
+
+    <mat-paginator *ngIf="offers.length > 0" id="topPag" [length]="totalOffers"
+      [pageSize]="offersPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"
+      class="pagbottom">
+    </mat-paginator>
+
+    <div id="carddiv" *ngIf="offers.length <= 0">
+      <mat-card class=" example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Brak Danych</mat-card-title>
+          <mat-card-subtitle>W bazie nie ma jeszcze żadnych wystawionych
+            ofert.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="powrot()">
+            Powrót
+          </button>
+          <button mat-raised-button color="primary" routerLink="/lazy/offercreate">
+            Utwórz ofertę
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby odczytać dane.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>

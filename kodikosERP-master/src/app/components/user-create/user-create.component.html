@@ -1,0 +1,993 @@
+<main>
+  <span *ngIf="userIsAuthenticated">
+    <div id="menu">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu"
+          >STRONA GŁÓWNA</mat-button-toggle
+        >
+        <mat-button-toggle routerLink="/lazy/admin"
+          >Administracja</mat-button-toggle
+        >
+        <mat-button-toggle routerLink="/userlist"
+          >Użytkownicy</mat-button-toggle
+        >
+        <mat-button-toggle class="imhere"
+          >Użytkownik: "{{ user.name }} {{ user.surname }}"</mat-button-toggle
+        >
+        <mat-button-toggle (click)="logout()">
+          {{ loggedInUser.name }} {{ loggedInUser.surname }}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <mat-card>
+      <!-- template driven form -->
+      <form (submit)="onSaveUser(userCreateForm)" #userCreateForm="ngForm">
+        <button mat-raised-button color="primary" type="submit">
+          Zapisz użytkownika
+        </button>
+        &nbsp;
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          (click)="powrot()"
+        >
+          Anuluj
+        </button>
+        <h4>Informacje podstawowe</h4>
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="login"
+            [ngModel]="user?.login"
+            placeholder="Login"
+            #login="ngModel"
+            required
+          />
+          <mat-error *ngIf="login.invalid">Proszę podać login.</mat-error>
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="email"
+            [ngModel]="user?.email"
+            placeholder="E-mail"
+          />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="department"
+            [ngModel]="user?.department"
+            placeholder="Dział"
+          />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field>
+          <input
+            matInput
+            type="password"
+            name="password"
+            (ngModel)="(user?.password)"
+            placeholder="Podaj nowe hasło"
+          />
+        </mat-form-field>
+        <mat-accordion multi="true">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              Dane personalne
+            </mat-expansion-panel-header>
+            <mat-form-field>
+              <input
+                matInput
+                type="text"
+                name="imie"
+                [ngModel]="user?.name"
+                placeholder="Imię"
+              />
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field>
+              <input
+                matInput
+                type="text"
+                name="nazwisko"
+                [ngModel]="user?.surname"
+                placeholder="Nazwisko"
+              />
+            </mat-form-field>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              Uprawnienia
+            </mat-expansion-panel-header>
+
+            <p *ngFor="let modul of dictionaries[0].values">
+              <mat-checkbox
+                [checked]="moduly.includes(modul)"
+                (change)="changeModul(modul)"
+              ></mat-checkbox>
+              <!-- <mat-checkbox (click)="addModul(modul)"
+              name="uprawninie" [(ngModel)]="moduly"
+              [checked]="moduly.includes(modul)"></mat-checkbox> -->
+              &nbsp;&nbsp;
+              <b>{{ modul }}</b>
+
+              <mat-accordion>
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    Dostęp do pól w module: {{ modul }}
+                  </mat-expansion-panel-header>
+
+                  <!-- KONTRAHENCI -->
+                  <mat-card class="karta" *ngIf="modul == 'kontakty'">
+                    <mat-card-title class="kontent"
+                      >Formatka<br />Kontakty</mat-card-title
+                    >
+                    <mat-card-content class="kontent">
+                      <!-- <form (submit)="zapiszPola(kontrahenciPola, 'kontrahenci')" #kontrahenciPola="ngForm"> -->
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.balance"
+                        name="balance"
+                        >saldo</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.paymentDeadline"
+                        name="paymentDeadline"
+                        >termin płatności</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.creditLimit"
+                        name="creditLimit"
+                        >limit kredytowy
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.comments"
+                        name="comments"
+                        >uwagi</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.buttonDodajKontr"
+                        name="buttonDodajKontr"
+                        >przycisk: Dodaj kontrahenta</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.buttonEdytujKontr"
+                        name="buttonEdytujKontr"
+                        >przycisk: Edytuj kontrahenta</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.buttonOfertaKontr"
+                        name="buttonOfertaKontr"
+                        >przycisk: Przygotuj ofertę</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.buttonUsunKontr"
+                        name="buttonUsunKontr"
+                        >przycisk: Usuń kontrahenta</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.adres"
+                        name="adres"
+                        >dane adresowe</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.kontakty"
+                        name="kontakty"
+                        >informacje o osobach do kontaktu</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.firmy"
+                        name="firmy"
+                        >firmy</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.projekty"
+                        name="projekty"
+                        >projekty</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.kontBankowe"
+                        name="kontBankowe"
+                        >informacje o kontach bankowych</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.pliki"
+                        name="pliki"
+                        >pliki</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.buttonPliki"
+                        name="buttonPliki"
+                        >przycisk: Wybierz pliki</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kontrahentFields.widziWszystkie"
+                        name="widziWszystkie"
+                        >Widzi całą bazę kontrahentów (zaznaczony) / Widzi tylko
+                        swoje wpisy (odznaczony)</mat-checkbox
+                      >
+                      <br /><br />
+                      <button mat-raised-button color="primary" type="submit">
+                        Zapisz
+                      </button>
+                      &nbsp;
+                      <!-- <button mat-raised-button color="primary" type="button" (click)="powrot()"> -->
+                      <!-- Anuluj -->
+                      <!-- </button> -->
+                      <!-- </form> -->
+                    </mat-card-content>
+                  </mat-card>
+
+                  <!-- SUBSTANCJE SZKODLIWE -->
+                  <mat-card class="karta" *ngIf="modul == 'szkodliwe'">
+                    <mat-card-title class="kontent"
+                      >Formatka<br />Substancje Szkodliwe</mat-card-title
+                    >
+                    <mat-card-content class="kontent">
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="szkodliwaFields.status"
+                        name="statusSz"
+                        >Status
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="szkodliwaFields.comments"
+                        name="commentsSz"
+                        >Komentarze
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="szkodliwaFields.buttonDodajKontr"
+                        name="buttonDodajSz"
+                        >Przycisk - Dodaj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="szkodliwaFields.buttonEdytujKontr"
+                        name="buttonEdytujSz"
+                        >Przycisk - Edytuj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="szkodliwaFields.buttonUsunKontr"
+                        name="buttonUsunSz"
+                        >Przycisk - Usuń
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="szkodliwaFields.projekty"
+                        name="projektySz"
+                        >Projekty
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="szkodliwaFields.firmy"
+                        name="firmySz"
+                        >Firmy
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="szkodliwaFields.pliki"
+                        name="plikiSz"
+                        >pliki</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="szkodliwaFields.buttonPliki"
+                        name="buttonPlikiSz"
+                        >przycisk: Wybierz pliki
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="szkodliwaFields.widziWszystkie"
+                        name="widziWszystkieSz"
+                        >Widzi całą bazę subst. szkodliwych (zaznaczony) / Widzi
+                        tylko swoje wpisy (odznaczony)</mat-checkbox
+                      >
+                      <br /><br />
+                      <button mat-raised-button color="primary" type="submit">
+                        Zapisz
+                      </button>
+                      &nbsp;
+                    </mat-card-content>
+                  </mat-card>
+
+                  <!-- ASORTYMENT -->
+                  <mat-card class="karta" *ngIf="modul == 'asortyment'">
+                    <mat-card-title class="kontent"
+                      >Formatka<br />Asortyment</mat-card-title
+                    >
+                    <mat-card-content class="kontent">
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="assortmentFields.status"
+                        name="statusAsort"
+                        >Status
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="assortmentFields.comments"
+                        name="commentsAsort"
+                        >Komentarze
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="assortmentFields.buttonDodajKontr"
+                        name="buttonDodajAsort"
+                        >Przycisk - Dodaj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="assortmentFields.buttonEdytujKontr"
+                        name="buttonEdytujAsort"
+                        >Przycisk - Edytuj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="assortmentFields.buttonUsunKontr"
+                        name="buttonUsunAsort"
+                        >Przycisk - Usuń
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="assortmentFields.projekty"
+                        name="projektyAsort"
+                        >Projekty
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="assortmentFields.firmy"
+                        name="firmyAsort"
+                        >Firmy
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="assortmentFields.pliki"
+                        name="plikiAsort"
+                        >pliki</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="assortmentFields.buttonPliki"
+                        name="buttonPlikiAsort"
+                        >przycisk: Wybierz pliki
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="assortmentFields.widziWszystkie"
+                        name="widziWszystkieAsort"
+                        >Widzi całą bazę asortymentu (zaznaczony) / Widzi tylko
+                        swoje wpisy (odznaczony)</mat-checkbox
+                      >
+                      <br /><br />
+                      <button mat-raised-button color="primary" type="submit">
+                        Zapisz
+                      </button>
+                      &nbsp;
+                    </mat-card-content>
+                  </mat-card>
+
+
+                  <!-- SEKRETARIAT -->
+                  <mat-card class="karta" *ngIf="modul == 'sekretariat'">
+                    <mat-card-title class="kontent"
+                      >Formatka<br />Sekretariat</mat-card-title
+                    >
+                    <mat-card-content class="kontent">
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="sekretariatFields.status"
+                        name="statusSekr"
+                        >Status
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="sekretariatFields.comments"
+                        name="commentsSekr"
+                        >Komentarze
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="sekretariatFields.buttonDodajKontr"
+                        name="buttonDodajSekr"
+                        >Przycisk - Dodaj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="sekretariatFields.buttonEdytujKontr"
+                        name="buttonEdytujSekr"
+                        >Przycisk - Edytuj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="sekretariatFields.buttonUsunKontr"
+                        name="buttonUsunSekr"
+                        >Przycisk - Usuń
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="sekretariatFields.projekty"
+                        name="projektySekr"
+                        >Projekty
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="sekretariatFields.firmy"
+                        name="firmySekr"
+                        >Firmy
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="sekretariatFields.pliki"
+                        name="plikiSekr"
+                        >pliki</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="sekretariatFields.buttonPliki"
+                        name="buttonPlikiSekr"
+                        >przycisk: Wybierz pliki
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="sekretariatFields.widziWszystkie"
+                        name="widziWszystkieSekr"
+                        >Widzi całą bazę sekretariatu (zaznaczony) / Widzi tylko
+                        swoje wpisy (odznaczony)</mat-checkbox
+                      >
+                      <br /><br />
+                      <button mat-raised-button color="primary" type="submit">
+                        Zapisz
+                      </button>
+                      &nbsp;
+                    </mat-card-content>
+                  </mat-card>
+
+                  <!-- MAGAZYN -->
+                  <mat-card class="karta" *ngIf="modul == 'towary'">
+                    <mat-card-title class="kontent"
+                      >Formatka<br />Magazyn</mat-card-title
+                    >
+                    <mat-card-content class="kontent">
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="warehouseFields.status"
+                        name="statusWareh"
+                        >Status
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="warehouseFields.comments"
+                        name="commentsWareh"
+                        >Komentarze
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="warehouseFields.buttonDodajKontr"
+                        name="buttonDodajWareh"
+                        >Przycisk - Dodaj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="warehouseFields.buttonEdytujKontr"
+                        name="buttonEdytujWareh"
+                        >Przycisk - Edytuj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="warehouseFields.buttonUsunKontr"
+                        name="buttonUsunWareh"
+                        >Przycisk - Usuń
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="warehouseFields.projekty"
+                        name="projektyWareh"
+                        >Projekty
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="warehouseFields.firmy"
+                        name="firmyWareh"
+                        >Firmy
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="warehouseFields.pliki"
+                        name="plikiWareh"
+                        >pliki</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="warehouseFields.buttonPliki"
+                        name="buttonPlikiWareh"
+                        >przycisk: Wybierz pliki
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="warehouseFields.widziWszystkie"
+                        name="widziWszystkieWareh"
+                        >Widzi całą bazę magazynu (zaznaczony) / Widzi tylko
+                        swoje wpisy (odznaczony)</mat-checkbox
+                      >
+                      <br /><br />
+                      <button mat-raised-button color="primary" type="submit">
+                        Zapisz
+                      </button>
+                      &nbsp;
+                    </mat-card-content>
+                  </mat-card>
+
+
+                  <!-- KLUCZE -->
+                  <mat-card class="karta" *ngIf="modul == 'klucze'">
+                    <mat-card-title class="kontent"
+                      >Formatka<br />Klucze</mat-card-title
+                    >
+                    <mat-card-content class="kontent">
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.menuKluczeUprawnienia"
+                        name="menuKluczeUprawnienia"
+                        >Menu - Klucze Uprawnienia
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.menuDodajUprawnienia"
+                        name="menuDodajUprawnienia"
+                        >Menu - Dodaj Uprawnienia
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.dodajUprSaAktywne"
+                        name="dodajUprSaAktywne"
+                      >Dodaj Uprawnienia - checkbox - Uprawnienia są aktywne
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.menuSpis"
+                        name="menuSpis"
+                        >Menu - Klucze Spis
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.menuDodajSpis"
+                        name="menuDodajSpis"
+                        >Menu - Dodaj Klucz
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.menuWydania"
+                        name="menuWydania"
+                        >Menu - Wydania Historia
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.menuDodajWydanie"
+                        name="menuDodajWydanie"
+                        >Menu - Wydaj Klucz
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.rejestracja"
+                        name="rejestracja"
+                        >Menu - Rejestracja
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.status"
+                        name="statusKlucze"
+                        >Status
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.comments"
+                        name="commentsKlucze"
+                        >Komentarze
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.buttonDodajKontr"
+                        name="buttonDodajKlucze"
+                        >Przycisk - Dodaj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.buttonEdytujKontr"
+                        name="buttonEdytujKlucze"
+                        >Przycisk - Edytuj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.buttonUsunKontr"
+                        name="buttonUsunKlucze"
+                        >Przycisk - Usuń
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeFields.widziWszystkie"
+                        name="widziWszystkieKlucze"
+                        >Widzi całą bazę kluczy (zaznaczony) / Widzi tylko
+                        swoje wpisy (odznaczony)</mat-checkbox
+                      >
+                      <br /><br />
+                      <button mat-raised-button color="primary" type="submit">
+                        Zapisz
+                      </button>
+                      &nbsp;
+                    </mat-card-content>
+                  </mat-card>
+
+
+                  <!-- KLUCZEREJESTR -->
+                  <mat-card class="karta" *ngIf="modul == 'kluczeRejestr'">
+                    <mat-card-title class="kontent"
+                      >Formatka<br />Klucze Rejestr</mat-card-title
+                    >
+                    <mat-card-content class="kontent">
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.menuKluczeUprawnienia"
+                        name="menuKluczeUprawnieniaRej"
+                        >Menu - Klucze Uprawnienia
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.menuDodajUprawnienia"
+                        name="menuDodajUprawnieniaRej"
+                        >Menu - Dodaj Uprawnienia
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.dodajUprSaAktywne"
+                        name="dodajUprSaAktywneRej"
+                      >Dodaj Uprawnienia - checkbox - Uprawnienia są aktywne
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.menuSpis"
+                        name="menuSpisRej"
+                        >Menu - Klucze Spis
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.menuDodajSpis"
+                        name="menuDodajSpisRej"
+                        >Menu - Dodaj Klucz
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.menuWydania"
+                        name="menuWydaniaRej"
+                        >Menu - Wydania Historia
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.menuDodajWydanie"
+                        name="menuDodajWydanieRej"
+                        >Menu - Wydaj Klucz
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.rejestracja"
+                        name="rejestracjaRej"
+                        >Menu - Rejestracja
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.status"
+                        name="statusKluczeRej"
+                        >Status
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.comments"
+                        name="commentsKluczeRej"
+                        >Komentarze
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.buttonDodajKontr"
+                        name="buttonDodajKluczeRej"
+                        >Przycisk - Dodaj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.buttonEdytujKontr"
+                        name="buttonEdytujKluczeRej"
+                        >Przycisk - Edytuj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.buttonUsunKontr"
+                        name="buttonUsunKluczeRej"
+                        >Przycisk - Usuń
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeRejestrFields.widziWszystkie"
+                        name="widziWszystkieKluczeRej"
+                        >Widzi całą bazę rejestru kluczy (zaznaczony) / Widzi tylko
+                        swoje wpisy (odznaczony)</mat-checkbox
+                      >
+                      <br /><br />
+                      <button mat-raised-button color="primary" type="submit">
+                        Zapisz
+                      </button>
+                      &nbsp;
+                    </mat-card-content>
+                  </mat-card>
+
+
+                  <!-- KLUCZEWYDANIA -->
+                  <mat-card class="karta" *ngIf="modul == 'kluczeWydania'">
+                    <mat-card-title class="kontent"
+                      >Formatka<br />Klucze Wydania</mat-card-title
+                    >
+                    <mat-card-content class="kontent">
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.menuKluczeUprawnienia"
+                        name="menuKluczeUprawnieniaWyd"
+                        >Menu - Klucze Uprawnienia
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.menuDodajUprawnienia"
+                        name="menuDodajUprawnieniaWyd"
+                        >Menu - Dodaj Uprawnienia
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.dodajUprSaAktywne"
+                        name="dodajUprSaAktywneWyd"
+                      >Dodaj Uprawnienia - checkbox - Uprawnienia są aktywne
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.menuSpis"
+                        name="menuSpisWyd"
+                        >Menu - Klucze Spis
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.menuDodajSpis"
+                        name="menuDodajSpisWyd"
+                        >Menu - Dodaj Klucz
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.menuWydania"
+                        name="menuWydaniaWyd"
+                        >Menu - Wydania Historia
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.menuDodajWydanie"
+                        name="menuDodajWydanieWyd"
+                        >Menu - Wydaj Klucz
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.rejestracja"
+                        name="rejestracjaWyd"
+                        >Menu - Rejestracja
+                      </mat-checkbox>
+
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.status"
+                        name="statusKluczeWyd"
+                        >Status
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.comments"
+                        name="commentsKluczeWyd"
+                        >Komentarze
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.buttonDodajKontr"
+                        name="buttonDodajKluczeWyd"
+                        >Przycisk - Dodaj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.buttonEdytujKontr"
+                        name="buttonEdytujKluczeWyd"
+                        >Przycisk - Edytuj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.buttonUsunKontr"
+                        name="buttonUsunKluczeWyd"
+                        >Przycisk - Usuń
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="kluczeWydaniaFields.widziWszystkie"
+                        name="widziWszystkieKluczeWyd"
+                        >Widzi całą bazę wydań kluczy (zaznaczony) / Widzi tylko
+                        swoje wpisy (odznaczony)</mat-checkbox
+                      >
+                      <br /><br />
+                      <button mat-raised-button color="primary" type="submit">
+                        Zapisz
+                      </button>
+                      &nbsp;
+                    </mat-card-content>
+                  </mat-card>
+
+
+
+                  <!-- PRZESYLKI -->
+                  <mat-card class="karta" *ngIf="modul == 'przesylki'">
+                    <mat-card-title class="kontent"
+                      >Formatka<br />Przesyłki</mat-card-title
+                    >
+                    <mat-card-content class="kontent">
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="przesylkiFields.status"
+                        name="statusPrzesylki"
+                        >Status
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="przesylkiFields.comments"
+                        name="commentsPrzesylki"
+                        >Komentarze
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="przesylkiFields.buttonDodajKontr"
+                        name="buttonDodajPrzesylki"
+                        >Przycisk - Dodaj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="przesylkiFields.buttonEdytujKontr"
+                        name="buttonEdytujPrzesylki"
+                        >Przycisk - Edytuj
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="przesylkiFields.buttonUsunKontr"
+                        name="buttonUsunPrzesylki"
+                        >Przycisk - Usuń
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="przesylkiFields.projekty"
+                        name="projektyAsort"
+                        >Projekty
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="przesylkiFields.firmy"
+                        name="firmyAsort"
+                        >Firmy
+                      </mat-checkbox>
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="przesylkiFields.pliki"
+                        name="plikiAsort"
+                        >pliki</mat-checkbox
+                      >
+                      <br />
+                      <mat-checkbox
+                        [(ngModel)]="przesylkiFields.buttonPliki"
+                        name="buttonPlikiAsort"
+                        >przycisk: Wybierz pliki
+                      </mat-checkbox>
+                      <br>
+                      <mat-checkbox
+                        [(ngModel)]="przesylkiFields.widziWszystkie"
+                        name="widziWszystkiePrzesylki"
+                        >Widzi całą bazę przesyłek (zaznaczony) / Widzi tylko
+                        swoje wpisy (odznaczony)</mat-checkbox
+                      >
+                      <br /><br />
+                      <button mat-raised-button color="primary" type="submit">
+                        Zapisz
+                      </button>
+                      &nbsp;
+                    </mat-card-content>
+                  </mat-card>
+
+
+
+                </mat-expansion-panel>
+              </mat-accordion>
+            </p>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <br />
+        <button mat-raised-button color="primary" type="submit">
+          Zapisz użytkownika
+        </button>
+        &nbsp;
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="powrot()"
+        >
+          Anuluj
+        </button>
+      </form>
+    </mat-card>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle
+          >Zaloguj się do systemu aby zapisać dane.</mat-card-subtitle
+        >
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>

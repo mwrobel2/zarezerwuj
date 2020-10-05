@@ -1,0 +1,290 @@
+<main>
+  <span *ngIf="userIsAuthenticated">
+    <div id="menu">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+        <mat-button-toggle routerLink="/rrwmodule/przesylki">Przesyłki</mat-button-toggle>
+        <mat-button-toggle class="imhere"><b>Dodaj przesyłkę</b></mat-button-toggle>
+        <mat-button-toggle (click)="logout()">{{ loggedInUser.name }} {{ loggedInUser.surname }}</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <mat-card>
+      <form [formGroup]="form" (submit)="onSavePrzesylka()">
+        <button *ngIf="dispFields.buttonDodajKontr" mat-raised-button color="primary" type="submit">
+          Zapisz informacje o przesyłce
+        </button>
+        &nbsp;
+        <button mat-raised-button color="primary" type="button" (click)="powrot()">
+          Anuluj
+        </button>
+        <h4>Informacje o przesyłce</h4>
+
+
+        <div class="limitkred2">
+          <div class="div2b">
+            <mat-form-field>
+              <mat-label>Status przesyłki</mat-label>
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let status of dictionaries[4]?.values" value="{{ status }}">
+                  {{ status }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-form-field>
+          <input matInput type="text" formControlName="nazwaPelna" placeholder="nazwa firmy (dostawca przesyłki)" />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="text" formControlName="nrZapotrzebowania" placeholder="numer zapotrzebowania" />
+        </mat-form-field>
+
+        <div *ngIf="odbiorcyPrzesylki">
+          Odbiorcy przesyłki:
+            <ul>
+              <li *ngFor="let odbiorca of odbiorcyPrzesylki" (click)="usunOdbiorce(odbiorca)" class="myszkaPointer">{{ odbiorca }}</li>
+            </ul>
+            <br/>
+        </div>
+
+        <div class="formatkaRow">
+          <form id="filter" (keyup)="zerujP()">
+            <label>
+              <b>Odbiorca przesyłki (nazwisko)</b>: </label>
+            <input type="text" [(ngModel)]="nazwiskoTerm" name="nazwiskoTerm" />
+          </form>
+        </div>
+        <div class="formatkaRow" *ngIf="this.pracownicys">
+          <div class="odstep">
+            <ul>
+              <li
+                *ngFor="let pracownik of pracownicys | pracownikNazwisko:nazwiskoTerm | paginate: { itemsPerPage:5, currentPage: p }">
+                <span (click)="wybierzPracownika(pracownik)" class="centrujTekst">
+                  <a>{{ pracownik.name }} {{ pracownik.surname }}</a>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="formatkaRow2" *ngIf="this.pracownicys">
+          <pagination-controls (pageChange)="p=$event" previousLabel="Poprzedni" nextLabel="Następny">
+          </pagination-controls>
+        </div>
+
+        <div class="limitkred2">
+          <div class="div2b">
+            <mat-form-field>
+              <mat-label>Rodzaj płatności</mat-label>
+              <mat-select formControlName="rodzajPlatnosci">
+                <mat-option *ngFor="let platnoscRodzaj of dictionaries[3]?.values" value="{{ platnoscRodzaj }}">
+                  {{ platnoscRodzaj }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div class="div2b">
+            <mat-form-field>
+              <input matInput type="number" formControlName="kwota" placeholder="kwota (wartość przesyłki)" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-form-field *ngIf="this.dispFields.comments">
+          <textarea matInput rows="4" formControlName="comments"
+            placeholder="dodatkowe informacje na temat przesyłki"></textarea>
+        </mat-form-field>
+
+
+        <!-- Firmy -->
+
+        <div class="limitkred" *ngIf="dispFields.firmy">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="firmyDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Nazwa firmy
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.name }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="warn" (click)="deleteFirma(element)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="firmyKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: firmyKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="limitkred" *ngIf="dispFields.firmy">
+          <div class="div2b">
+            <mat-form-field>
+              <mat-label>Firma</mat-label>
+              <mat-select formControlName="firma">
+                <mat-option (click)="wyborFirmy(firma)" *ngFor="let firma of dictionaries[2]?.values"
+                  value="{{ firma }}">{{ firma }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Projekty  -->
+
+        <div class="limitkred" *ngIf="dispFields.projekty">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="projektyDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Projekt
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.name }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="warn" (click)="deleteProjekt(element)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="projektyKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: projektyKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="limitkred" *ngIf="dispFields.projekty">
+          <div class="div2b">
+            <mat-form-field>
+              <mat-label>Projekt</mat-label>
+              <mat-select formControlName="projekt">
+                <mat-option (click)="wyborProjektu(projekt)" *ngFor="let projekt of dictionaries[1]?.values"
+                  value="{{ projekt }}">{{ projekt }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- mat table Wybrane pliki -->
+
+        <div class="limitkred" *ngIf="dispFields.pliki">
+          <div *ngIf="plikiLocal.length > 0">
+            <div class="tabelaDiv">
+              <table mat-table [dataSource]="plikiDataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                    Nazwa
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                    <a href="{{ backendUrl }}/{{ element.katalog }}/{{ element.fileName }}"
+                      target="_blank">{{ element.name }}</a>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rodzaj">
+                  <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                    Typ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                    {{ element.rodzaj }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                    Akcje
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <button mat-button color="warn" (click)="deletePlik(element)" type="button">
+                      Usuń plik
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="plikiKolumny"></tr>
+                <tr mat-row *matRowDef="let row; columns: plikiKolumny"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- dodawanie plików  -->
+
+        <div class="limitkred" *ngIf="dispFields.pliki">
+          <form [formGroup]="formPliki" (submit)="onAddPliki()">
+            <div class="div2b">
+              <mat-form-field>
+                <mat-label>typ pliku/plików</mat-label>
+                <mat-select formControlName="typPliku">
+                  <mat-option value="specyfikacja" (click)="ustawAktualnyTypPliku('specyfikacja')">specyfikacja
+                  </mat-option>
+                  <mat-option value="dokumentacja" (click)="ustawAktualnyTypPliku('dokumentacja')">dokumentacja
+                  </mat-option>
+                  <mat-option value="inny" (click)="ustawAktualnyTypPliku('inny')">inny</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="div2b">
+              <button mat-stroked-button type="button" (click)="filePicker.click()">
+                Wybierz pliki
+              </button>
+              <input type="file" multiple #filePicker (change)="onFilesPicked($event)" />
+            </div>
+            <br />
+          </form>
+        </div>
+
+        <!-- przyciski zapisz anuluj -->
+
+        <button mat-raised-button color="primary" type="submit" *ngIf="dispFields.buttonDodajKontr">
+          Zapisz informacje o przesyłce
+        </button>
+        &nbsp;
+        <button mat-raised-button color="primary" type="button" (click)="powrot()" *ngIf="mozliwoscAnulowania">
+          Anuluj
+        </button>
+        <button mat-raised-button color="primary" type="button" *ngIf="!mozliwoscAnulowania" disabled>
+          Anuluj
+        </button>
+      </form>
+    </mat-card>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby zapisać dane.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>

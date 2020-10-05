@@ -1,0 +1,436 @@
+<!-- <app-menu></app-menu> -->
+<main>
+  <!-- <span *ngIf="userIsAuthenticated"> -->
+  <span>
+    <div id="menu">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+        <mat-button-toggle class="imhere"><b>Substancje Szkodliwe</b></mat-button-toggle>
+        <mat-button-toggle routerLink="/lazy/szkodliwacreate" *ngIf="dispFields.buttonDodajKontr">Dodaj substancję
+        </mat-button-toggle>
+        <mat-button-toggle (click)="logout()">{{ this.loggedInUser.name }} {{ this.loggedInUser.surname }}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <div class="searchClass">
+      <form (submit)="onSearchSzkodliwa(szkodliwaSearchForm)" #szkodliwaSearchForm="ngForm" class="searchForm">
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">nazwa substancji</mat-placeholder>
+          <input matInput type="text" name="nazwaPelna" [(ngModel)]="szkodliwa.fullName" />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">zakład</mat-placeholder>
+          <input matInput type="text" name="zaklad" [(ngModel)]="szkodliwa.zaklad" />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">nazwisko</mat-placeholder>
+          <input matInput type="text" name="surname" [(ngModel)]="szkodliwa.surname" />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">typ zagrożenia</mat-placeholder>
+          <input matInput type="text" name="zagrozenie" [(ngModel)]="szkodliwa.zagrozenie" />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">rok</mat-placeholder>
+          <input matInput type="text" name="rok" [(ngModel)]="szkodliwa.rok" />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field class="formfiel" *ngIf="dispFields.comments">
+          <mat-placeholder class="placclass">uwagi</mat-placeholder>
+          <input matInput type="text" name="comments" [(ngModel)]="szkodliwa.comments" />
+        </mat-form-field>
+        <button mat-raised-button type="submit">
+          Szukaj
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="clearForm(szkodliwaSearchForm)">
+          Wyczyść
+        </button>
+      </form>
+    </div>
+
+    <mat-spinner *ngIf="isLoading" class="spin"></mat-spinner>
+    <mat-accordion multi="true" *ngIf="szkodliwe.length > 0 && !isLoading">
+      <mat-expansion-panel *ngFor="let szkodliwa of szkodliwe">
+        <mat-expansion-panel-header>
+          <div id="dispHeader">
+            <span id="spanNazwa">
+              <b>{{ szkodliwa.fullName | uppercase }}</b>
+            </span>
+            <span id="spanSpacer"></span>
+            <!-- <span id="spanSaldo" *ngIf="dispFields.balance">
+              Saldo: {{ szkodliwa.balance }}
+              {{ szkodliwa.creditLimitCurrency }}
+            </span> -->
+            <span class="spanMenu">{{ szkodliwa.miejscePrzech }}</span>
+          </div>
+        </mat-expansion-panel-header>
+        <div id="dispContent">
+          <div id="infoBasic">
+
+            <div>
+              <p>
+                <b>{{ szkodliwa.fullName }}</b><br /><br />
+                <span *ngIf="szkodliwa.cas">Numer CAS: <b>{{ szkodliwa.cas }}</b></span>
+
+              </p>
+            </div>
+            <p>
+              <span>
+                Ilość: <b>{{ szkodliwa.ilosc }}</b> Jedonstka: <b>{{ szkodliwa.jednostka }}</b>
+                &nbsp;
+                Rok: <b>{{ szkodliwa.rok }}</b>
+              </span>
+
+            </p>
+
+            <p>
+              <span>Zakład: <b>{{ szkodliwa.zaklad }}</b></span>
+            </p>
+            <p>
+              <span>Producent: <b>{{ szkodliwa.producent }}</b></span>
+            </p>
+            <p>
+              <span>Miejsce przechowywania: <b>{{ szkodliwa.miejscePrzech }}</b></span>
+            </p>
+
+
+            <div class="fullWidth" *ngIf="szkodliwa.comments">
+              <p>
+                UWAGI:<br />
+                <b>{{ szkodliwa.comments }}</b>
+              </p>
+            </div>
+
+
+
+            <!-- <span *ngIf="dispFields.adres">
+              <mat-accordion>
+                <mat-expansion-panel
+                  *ngIf="szkodliwa.city || szkodliwa.street || szkodliwa.postcode || szkodliwa.country || szkodliwa.ceo">
+                  <mat-expansion-panel-header>
+                    Adres siedziby, KRS, REGON
+                  </mat-expansion-panel-header>
+                  <p *ngIf="szkodliwa.street">
+                    ulica i nr domu: <b>{{ szkodliwa.street }}</b>
+                  </p>
+                  <p *ngIf="szkodliwa.city">
+                    miasto: <b>{{ szkodliwa.city }}</b>
+                  </p>
+                  <p *ngIf="szkodliwa.postcode">
+                    kod pocztowy: <b>{{ szkodliwa.postcode }}</b>
+                  </p>
+                  <p *ngIf="szkodliwa.country">
+                    państwo: <b>{{ szkodliwa.country }}</b>
+                  </p>
+                  <p *ngIf="szkodliwa.ceo">
+                    prezes: <b>{{ szkodliwa.ceo }}</b>
+                  </p>
+                  <p *ngIf="
+                      szkodliwa.krs || szkodliwa.regon || szkodliwa.status
+                    ">
+                    <span *ngIf="szkodliwa.krs">KRS: <b>{{ szkodliwa.krs }}</b></span>
+                    &nbsp;
+                    <span *ngIf="szkodliwa.regon">REGON: <b>{{ szkodliwa.regon }}</b></span>
+                    &nbsp;
+                    <span *ngIf="szkodliwa.status && dispFields.status">status: <b>{{ szkodliwa.status }}</b></span>
+                  </p>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </span> -->
+
+            <!-- adres do wysyłki -->
+
+            <!-- <span *ngIf="dispFields.adres">
+              <mat-accordion>
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    Adres do wysyłki
+                  </mat-expansion-panel-header>
+                  <p *ngIf="
+                  szkodliwa.streetShipping">
+                    ulica: <b>{{ szkodliwa.streetShipping }}</b>
+                  </p>
+                  <p *ngIf="szkodliwa.cityShipping">
+                    miasto: <b>{{ szkodliwa.cityShipping }}</b>
+                  </p>
+                  <p *ngIf="
+                  szkodliwa.postcodeShipping">
+                    kod pocztowy: <b>{{ szkodliwa.postcodeShipping }}</b>
+                  </p>
+                  <p *ngIf="
+                  szkodliwa.countryShipping">
+                    kraj: <b>{{ szkodliwa.countryShipping }}</b>
+                  </p>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </span> -->
+
+            <!-- Osoby do kontaktu - wyświetlanie -->
+
+            <!-- <span *ngIf="szkodliwa.anotherContacts.length > 0 && dispFields.kontakty">
+              <mat-accordion>
+                <mat-expansion-panel [expanded]=true>
+                  <mat-expansion-panel-header>
+                    Osoby do kontaktu
+                  </mat-expansion-panel-header>
+
+                  <div>
+                    <div *ngIf="szkodliwa.anotherContacts[0].acName" class="tabelaDiv">
+                      <table mat-table [dataSource]="szkodliwa.anotherContacts" class="mat-elevation-z8">
+
+                        <ng-container matColumnDef="acName">
+                          <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Imię</th>
+                          <td mat-cell *matCellDef="let element" class="klasaKolumny">{{ element.acName }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="acSurname">
+                          <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Nazwisko</th>
+                          <td mat-cell *matCellDef="let element" class="klasaKolumny">{{ element.acSurname }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="acEmail">
+                          <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Email</th>
+                          <td mat-cell *matCellDef="let element" class="klasaKolumny">{{ element.acEmail }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="acPhone">
+                          <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Telefon</th>
+                          <td mat-cell *matCellDef="let element" class="klasaKolumny">{{ element.acPhone }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="acComment">
+                          <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Komentarz</th>
+                          <td mat-cell *matCellDef="let element" class="klasaKolumny">{{ element.acComment }}</td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="acKolumny"></tr>
+                        <tr mat-row *matRowDef="let row; columns: acKolumny"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </span> -->
+
+
+            <span *ngIf="szkodliwa.pliki.length > 0 && dispFields.pliki">
+              <div>
+                <p>PLIKI:
+                  <br />
+                  <div *ngIf="szkodliwa.pliki[0].name" class="tabelaDiv">
+                    <table mat-table [dataSource]="szkodliwa.pliki" class="mat-elevation-z8">
+
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Nazwa</th>
+                        <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                          <a href="{{backendUrl}}/szkodliwe/{{element.fileName}}" target="_blank">{{ element.name }}</a>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="rodzaj">
+                        <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Typ</th>
+                        <td mat-cell *matCellDef="let element" class="klasaKolumny">{{ element.rodzaj }}</td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="plikiKolumny"></tr>
+                      <tr mat-row *matRowDef="let row; columns: plikiKolumny"></tr>
+                    </table>
+                  </div>
+              </div>
+            </span>
+
+
+            <!-- zmodyfikowany, dodany przez -->
+
+            <div class="fullWidth" *ngIf="szkodliwa.addBy.surname">
+              <p>
+                Dodany przez:
+                <b>
+                  {{ szkodliwa.addBy.name }} {{ szkodliwa.addBy.surname }}
+                  <span *ngIf="szkodliwa.addDate">{{ szkodliwa.addDate | date: 'dd.MM.yyyy HH:mm:ss' }}</span>
+                </b>
+              </p>
+            </div>
+            <div class="fullWidth" *ngIf="szkodliwa.modBy.surname">
+              <p>
+                Zmodyfikowany przez:
+                <b>
+                  {{ szkodliwa.modBy.name }} {{ szkodliwa.modBy.surname }}
+                  <span *ngIf="szkodliwa.modDate">{{ szkodliwa.modDate | date: 'dd.MM.yyyy HH:mm:ss' }}</span>
+                </b>
+              </p>
+            </div>
+
+
+
+          </div>
+
+          <div>
+            <div class="tabelaDiv">
+              <table mat-table [dataSource]="szkodliwa.rodzajeZagrozen" class="mat-elevation-z8">
+
+                <ng-container matColumnDef="zagrozenie">
+                  <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Typ zagrożenia</th>
+                  <td mat-cell *matCellDef="let element" class="klasaKolumny">{{ element.zagrozenie }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="osobyPracujace">
+                  <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Osoby pracjujące z substancją</th>
+                  <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                    <ul *ngFor="let oso of element.osobyPracujace">
+                      <li>{{ oso.imie }} {{ oso.nazwisko }}
+                        {{ oso.stanowisko }} {{ oso.czasZmiana }} {{ oso.czasRok }}
+                      </li>
+                    </ul>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="zagrozeniaKolumny"></tr>
+                <tr mat-row *matRowDef="let row; columns: zagrozeniaKolumny"></tr>
+              </table>
+            </div>
+          </div>
+
+
+
+        </div>
+
+        <!-- konta bankowe -->
+
+        <!-- <div *ngIf="szkodliwa.bankAccounts && szkodliwa.bankAccounts.length > 0 && dispFields.kontBankowe">
+          <div *ngIf="szkodliwa.bankAccounts[0].dkNazwa" class="tabelaDiv">
+            <p>Konta Bankowe:</p>
+            <table mat-table [dataSource]="szkodliwa.bankAccounts" class="mat-elevation-z8">
+
+              <ng-container matColumnDef="dkNazwa">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Nazwa banku</th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">{{ element.dkNazwa }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="dkNrKonta">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Numer konta</th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">{{ element.dkNrKonta }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="dkDomyslne">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Konto domyślne</th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  <span *ngIf="element.dkDomyslne">TAK</span></td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="dkKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: dkKolumny"></tr>
+            </table>
+          </div>
+        </div> -->
+
+
+        <!-- firmy -->
+
+        <!-- <div *ngIf="szkodliwa.firms && szkodliwa.firms.length > 0 && dispFields.firmy">
+          <br>
+          <b>Firmy:</b>
+          <ul>
+            <li *ngFor="let firma of szkodliwa.firms">{{ firma }}</li>
+          </ul>
+        </div> -->
+
+        <!-- projekty -->
+
+        <!-- <div *ngIf="szkodliwa.projects && szkodliwa.projects.length > 0 && dispFields.projekty">
+          <br>
+          <b>Projekty:</b>
+          <ul>
+            <li *ngFor="let projekt of szkodliwa.projects">{{ projekt }}</li>
+          </ul>
+        </div> -->
+
+        <!-- <div class="limitkred">
+          <p *ngIf="szkodliwa.creditLimit && dispFields.creditLimit">
+            Limit kredytowy:
+            <b>{{ szkodliwa.creditLimit }}</b>
+          </p>
+          <p *ngIf="szkodliwa.paymentDeadline && dispFields.paymentDeadline">
+            Termin płatności w dniach:
+            <b>{{ szkodliwa.paymentDeadline }}</b>
+          </p>
+          <p *ngIf="szkodliwa.balance && dispFields.balance">
+            Saldo:
+            <b>{{ szkodliwa.balance }} </b>{{ szkodliwa.creditLimitCurrency }}
+          </p>
+        </div>
+
+        <div class="fullWidth" *ngIf="szkodliwa.accountManagerLogin">
+          <p *ngIf="szkodliwa.accountManager">
+            OPIEKUN:<br />
+            <b>{{ szkodliwa.accountManager }}</b>
+          </p>
+        </div> -->
+
+        <!-- pliki -->
+
+
+
+        <!-- przyciski -->
+
+        <mat-action-row>
+          <!-- <button mat-button color="primary" *ngIf="dispFields.buttonOfertaKontr"
+            [routerLink]="['/lazy/offercreatecontr', szkodliwa.id]">
+            Przygotuj ofertę
+          </button> -->
+          <button mat-button color="primary" *ngIf="dispFields.buttonEdytujKontr"
+            [routerLink]="['/lazy/szkodliwaedit', szkodliwa.id]">
+            Edytuj
+          </button>
+          <button mat-button color="warn" *ngIf="dispFields.buttonUsunKontr"
+            (click)="onDelete(szkodliwa.id, szkodliwa.pliki)">
+            Usuń
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <mat-paginator *ngIf="szkodliwe.length > 0" id="topPag" [length]="totalSzkodliwe" [pageSize]="szkodliwePerPage"
+      [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)" class="pagbottom">
+    </mat-paginator>
+
+    <div id="carddiv" *ngIf="szkodliwe.length <= 0">
+      <mat-card class=" example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Brak Danych</mat-card-title>
+          <mat-card-subtitle>W bazie nie ma jeszcze informacji o
+            substancjach szkodliwych.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="powrot()">
+            Powrót
+          </button>
+          <button mat-raised-button color="primary" *ngIf="dispFields.buttonDodajKontr"
+            routerLink="/lazy/szkodliwacreate">
+            Dodaj substancję
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby odczytać dane.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>

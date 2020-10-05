@@ -1,0 +1,23 @@
+<br><br>
+<div id="kartaDiv">
+  <mat-card class="karta">
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <!-- postForm is a local reference -->
+    <form (submit)="onLoginPassport(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
+      <mat-form-field>
+        <input matInput name="login" ngModel type="text" placeholder="Twoja nazwa użytkownika" #loginInput="ngModel" required>
+        <mat-error *ngIf="loginInput.invalid">Podaj nazwę użytkownika.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input type="password" name="password" ngModel matInput placeholder="Hasło" #passwordInput="ngModel" required>
+        <mat-error *ngIf="passwordInput.invalid">Wpisz hasło.</mat-error>
+      </mat-form-field>
+      <mat-checkbox class="example-margin" [(ngModel)]="logowanieDomenowe" name="logowanieDomenowe">Logowanie hasłem Windows</mat-checkbox>
+      <br />
+      <button mat-raised-button type="submit" class="logBut">Zaloguj się do systemu</button>
+      &nbsp;
+      <button mat-raised-button routerLink="/" class="logBut">Strona startowa</button>
+      <!-- <button routerLink="/contractorslist">Lista Kontrahentów</button> -->
+    </form>
+  </mat-card>
+</div>

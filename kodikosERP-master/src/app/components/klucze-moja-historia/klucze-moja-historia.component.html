@@ -1,0 +1,202 @@
+<!-- <app-menu></app-menu> -->
+<main>
+  <!-- <span *ngIf="userIsAuthenticated"> -->
+  <span>
+    <div id="menu">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+
+        <mat-button-toggle class="imhere"><b>Klucze - historia</b></mat-button-toggle>
+
+        <mat-button-toggle routerLink="/rrwmodule/klucze" *ngIf="dispFields.menuKluczeUprawnienia">Klucze - uprawnienia</mat-button-toggle>
+        <mat-button-toggle routerLink="/rrwmodule/kluczeadd" *ngIf="dispFields.menuDodajUprawnienia">Dodaj uprawnienia
+        </mat-button-toggle>
+
+        <mat-button-toggle routerLink="/rrwmodule/kluczerejestr"  *ngIf="dispFields.menuSpis">Klucze - spis</mat-button-toggle>
+        <mat-button-toggle routerLink="/rrwmodule/kluczerejestradd"  *ngIf="dispFields.menuDodajSpis">Dodaj klucz</mat-button-toggle>
+
+        <mat-button-toggle routerLink="/rrwmodule/kluczewydania"  *ngIf="dispFields.menuWydania">Wydania - historia</mat-button-toggle>
+        <mat-button-toggle routerLink="/rrwmodule/kluczewydaniaadd"  *ngIf="dispFields.menuDodajWydanie">Wydaj klucz</mat-button-toggle>
+
+        <mat-button-toggle routerLink="/rrwmodule/kluczerejestracja" *ngIf="dispFields.rejestracja">Rejestracja - START</mat-button-toggle>
+
+        <mat-button-toggle (click)="logout()">{{ this.loggedInUser.name }} {{ this.loggedInUser.surname }}
+
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <!-- <div class="searchClass">
+      <form (submit)="onSearchKluczeWydania(kluczeWydaniaSearchForm)" #kluczeWydaniaSearchForm="ngForm"
+        class="searchForm">
+
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">numer klucza</mat-placeholder>
+          <input matInput type="text" name="numerKlucza" [(ngModel)]="kluczWydania.numerKlucza" />
+        </mat-form-field>
+
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">numer RFID klucza</mat-placeholder>
+          <input matInput type="text" name="rfidKlucza" [(ngModel)]="kluczWydania.rfidKlucza" />
+        </mat-form-field>
+
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">operacja</mat-placeholder>
+          <input matInput type="text" name="operacja" [(ngModel)]="kluczWydania.operacja" />
+        </mat-form-field>
+
+        &nbsp;
+        <mat-form-field class="formfiel">
+          <mat-placeholder class="placclass">nazwisko</mat-placeholder>
+          <input matInput type="text" name="nazwisko" [(ngModel)]="kluczWydania.nazwisko" />
+        </mat-form-field>
+
+        <button mat-raised-button type="submit">
+          Szukaj
+        </button>
+        <button mat-raised-button color="primary" type="button" (click)="clearForm(kluczeWydaniaSearchForm)">
+          Wyczyść
+        </button>
+      </form>
+    </div> -->
+
+    <mat-spinner *ngIf="isLoading" class="spin"></mat-spinner>
+
+    <mat-accordion multi="true" *ngIf="kluczeWydania.length > 0 && !isLoading">
+      <mat-expansion-panel *ngFor="let kluczWydania of kluczeWydania">
+        <mat-expansion-panel-header>
+          <div id="dispHeader">
+            <span class="spanNazwaWydany"
+              *ngIf="kluczWydania.operacja === 'wydanie'"><b>{{ kluczWydania.numerKlucza | uppercase }}</b></span>
+            <span *ngIf="kluczWydania.operacja === 'zwrot'"><b>{{ kluczWydania.numerKlucza | uppercase }}</b></span>
+            <span *ngIf="kluczWydania.dataWydania">&nbsp; &#8741;
+              data wydania: {{ kluczWydania.dataWydania | date: 'dd.MM.yyyy HH:mm:ss' }}</span>
+            <span *ngIf="kluczWydania.dataZwrotu">&nbsp; &#8741;
+              data zwrotu: {{ kluczWydania.dataZwrotu | date: 'dd.MM.yyyy HH:mm:ss' }}</span>
+
+            <span id="spanSpacer"></span>
+            <span id="spanSaldo" *ngIf="kluczWydania.nazwisko">
+              {{ kluczWydania.nazwisko }}
+            </span>
+          </div>
+        </mat-expansion-panel-header>
+
+        <br />
+        <div id="dispContent">
+          <div id="infoBasic">
+
+            <div *ngIf="kluczWydania.operacja === 'wydanie'">
+              <p><span class="spanNazwaWydany">Klucz jest aktualnie wydany</span><br />
+                Osoba, która pobrała klucz to: {{ kluczWydania.imie }} {{ kluczWydania.nazwisko }}</p>
+            </div>
+            <div class="inonerow2">
+              <div>
+                Wydanie klucza:
+                <b>{{ kluczWydania.dataWydania | date: 'dd.MM.yyyy HH:mm:ss' }}</b>
+              </div>
+              &nbsp;
+              <div>
+                Zwrot klucza:
+                <b>{{ kluczWydania.dataZwrotu | date: 'dd.MM.yyyy HH:mm:ss' }}</b>
+              </div>
+              <!-- &nbsp;
+              <div>
+                <span *ngIf="kluczWydania.operacja">operacja:
+                  <b>{{ kluczWydania.operacja }}</b><br></span>
+              </div> -->
+            </div>
+            <div class="inonerow2">
+              <div>
+                <span *ngIf="kluczWydania.numerKlucza">Numer Klucza:
+                  <b>{{ kluczWydania.numerKlucza }}</b><br></span>
+              </div>
+              <!-- &nbsp;
+              <div>
+                <span *ngIf="kluczWydania.rfidKlucza">RFID klucza:
+                  <b>{{ kluczWydania.rfidKlucza }}</b><br></span>
+              </div> -->
+            </div>
+            <div class="inonerow2">
+              <div>
+                <span *ngIf="kluczWydania.imie">Imię:
+                  <b>{{ kluczWydania.imie }}</b><br></span>
+              </div>
+              &nbsp;
+              <div>
+                <span *ngIf="kluczWydania.nazwisko">Nazwisko:
+                  <b>{{ kluczWydania.nazwisko }}</b><br></span>
+              </div>
+              &nbsp;
+              <div>
+                <span *ngIf="kluczWydania.dzial">Dział:
+                  <b>{{ kluczWydania.dzial }}</b><br></span>
+              </div>
+              <!-- &nbsp;
+              <div>
+                <span *ngIf="kluczWydania.rfidKarty">RFID karty:
+                  <b>{{ kluczWydania.rfidKarty }}</b><br></span>
+              </div> -->
+            </div>
+            <br />
+
+            <!-- zmodyfikowany, dodany przez -->
+<!--
+            <div class="fullWidth" *ngIf="kluczWydania.addBy.name">
+              Dodany przez:
+              <b>
+                {{ kluczWydania.addBy.name }} {{ kluczWydania.addBy.surname }} -
+                {{ kluczWydania.addDate | date: 'dd.MM.yyyy HH:mm:ss' }}
+              </b>
+            </div>
+            <div class="fullWidth" *ngIf="kluczWydania.modBy.name">
+              Zmodyfikowany przez:
+              <b>
+                {{ kluczWydania.modBy.name }} {{ kluczWydania.modBy.surname }} -
+                {{ kluczWydania.modDate | date: 'dd.MM.yyyy HH:mm:ss' }}
+              </b>
+            </div> -->
+
+          </div>
+
+        </div>
+
+        <!-- przyciski -->
+
+        <!-- <mat-action-row>
+          <button mat-button color="primary" *ngIf="dispFields.buttonEdytujKontr"
+            [routerLink]="['/rrwmodule/kluczewydaniaedit', kluczWydania.id]">
+            Edytuj
+          </button>
+          <button mat-button color="warn" *ngIf="dispFields.buttonUsunKontr" (click)="onDelete(kluczWydania.id)">
+            Usuń
+          </button>
+        </mat-action-row> -->
+      </mat-expansion-panel>
+    </mat-accordion>
+    <mat-paginator *ngIf="kluczeWydania.length > 0" id="topPag" [length]="totalKluczeWydania" [pageSize]="kluczePerPage"
+      [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)" class="pagbottom">
+    </mat-paginator>
+
+
+
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby odczytać dane.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>
+

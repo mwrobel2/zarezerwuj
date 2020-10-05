@@ -1,0 +1,341 @@
+<div id="menu" *ngIf="userIsAuthenticated">
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+    <mat-button-toggle class="imhere" routerLink="/glownemenu"><b>STRONA GŁÓWNA</b></mat-button-toggle>
+    <mat-button-toggle (click)="logoutPassport()">{{ this.loggedInUser.name }}
+      {{ this.loggedInUser.surname }}</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<div class="container1">
+
+  <span routerLink="/contractorslist" class="przycisk" *ngIf="showKontrahenci">
+    <mat-card class="card1">
+      <mat-card-header class="kartaNaglowek">
+        <!-- <mat-card-title>Administracja</mat-card-title> -->
+        <mat-card-subtitle>Zarządzanie kontaktami</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="cardContent">
+        <i class="material-icons">
+          people_outline
+        </i>
+      </mat-card-content>
+      <!-- <div class="vspacer"></div> -->
+      <mat-card-actions>
+        <button mat-button routerLink="/contractorslist">{{ napisy.kontakty }}</button>
+      </mat-card-actions>
+    </mat-card>
+  </span>
+
+  <span routerLink="/warehouselist" class="przycisk" *ngIf="showTowary">
+    <mat-card class="card1">
+      <mat-card-header class="kartaNaglowek">
+        <!-- <mat-card-title>Administracja</mat-card-title> -->
+        <mat-card-subtitle>Zarządzanie magazynami</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="cardContent">
+        <i class="material-icons">
+          domain
+        </i>
+      </mat-card-content>
+      <!-- <div class="vspacer"></div> -->
+      <mat-card-actions>
+        <button mat-button routerLink="/warehouselist">MAGAZYNY</button>
+      </mat-card-actions>
+    </mat-card>
+  </span>
+
+  <span routerLink="/assortmentslist" class="przycisk" *ngIf="showAsortyment">
+    <mat-card class="card1">
+      <mat-card-header class="kartaNaglowek">
+        <mat-card-subtitle>Zarządzanie asortymentem</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="cardContent">
+        <i class="material-icons">
+          layers
+        </i>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/assortmentslist">ASORTYMENT</button>
+      </mat-card-actions>
+    </mat-card>
+  </span>
+
+  <span routerLink="/lazy/pracownicy" class="przycisk" *ngIf="showPracownicy">
+    <mat-card class="card1">
+      <mat-card-header class="kartaNaglowek">
+        <mat-card-subtitle>Zarządzanie pracownikami</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="cardContent">
+        <i class="material-icons">
+          accessibility_new
+        </i>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/lazy/pracownicy">PRACOWNICY</button>
+      </mat-card-actions>
+    </mat-card>
+  </span>
+
+  <span routerLink="/lazy/sekretariat" class="przycisk" *ngIf="showSekretariat">
+    <mat-card class="card1">
+      <mat-card-header class="kartaNaglowek">
+        <mat-card-subtitle>{{napisy.obsSekr}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="cardContent">
+        <i class="material-icons">
+          contact_mail
+        </i>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/lazy/sekretariat">{{ napisy.sekretariat }}</button>
+      </mat-card-actions>
+    </mat-card>
+  </span>
+
+  <mat-card class="card1" *ngIf="showOferty">
+    <mat-card-header class="kartaNaglowek">
+      <mat-card-subtitle>Zarządzanie ofertami</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        star_border
+      </i>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button routerLink="/lazy/offer">OFERTY</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showZamowienia">
+    <mat-card-header class="kartaNaglowek">
+      <mat-card-subtitle>Zarządzanie zamówieniami</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        assignment
+      </i>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button routerLink="/lazy/order" disabled>ZAMÓWIENIA</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showListawydan">
+    <mat-card-header class="kartaNaglowek">
+      <mat-card-subtitle>Lista wydań - szczegóły</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        assignment_turned_in
+      </i>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button disabled>LISTA WYDAŃ</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showFaktury">
+    <mat-card-header class="kartaNaglowek">
+      <mat-card-subtitle>Faktury - szczegóły</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <div class="pojNapis">
+        <i class="material-icons">
+          money
+        </i>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <br />
+      <button mat-button routerLink="/lazy/invoice" disabled>FAKTURY</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showProjekty">
+    <mat-card-header class="kartaNaglowek">
+      <mat-card-subtitle>Planowanie i raporty</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <div class="pojNapis">
+        <i class="material-icons">
+          all_out
+        </i>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <br />
+      <button mat-button routerLink="/lazy/project" disabled>PROJEKTY</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showSprzet">
+    <mat-card-header class="kafelSub">
+      <mat-card-subtitle>Baza sprzętu</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <div class="pojNapis">
+        <i class="material-icons">
+          queue_play_next
+        </i>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <br />
+      <button mat-button disabled>SPRZĘT</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showUmowy">
+    <mat-card-header class="kafelSub">
+      <mat-card-subtitle>Baza umów</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <div class="pojNapis">
+        <i class="material-icons">
+          book
+        </i>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <br />
+      <button mat-button routerLink="/lazy/contracts" >UMOWY</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1" *ngIf="showDokumenty">
+    <mat-card-header class="kafelSub">
+      <mat-card-subtitle>Rejestr dokumentów</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <div class="pojNapis">
+        <i class="material-icons">
+          bookmarks
+        </i>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <br />
+      <button mat-button disabled>DOKUMENTY</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <span routerLink="/rrwmodule/rcp" class="przycisk" *ngIf="showRCP">
+    <mat-card class="card1">
+      <mat-card-header class="kartaNaglowek">
+        <mat-card-subtitle>Rejestr czasu pracy</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="cardContent">
+        <i class="material-icons">
+          timelapse
+        </i>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/rrwmodule/rcp">RCP</button>
+      </mat-card-actions>
+    </mat-card>
+  </span>
+
+
+  <span routerLink="/rrwmodule/kluczemojahistoria" class="przycisk" *ngIf="showKlucze">
+    <mat-card class="card1">
+      <mat-card-header class="kartaNaglowek">
+        <mat-card-subtitle>Klucze - uprawnienia</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="cardContent">
+        <i class="material-icons">
+          vpn_key
+        </i>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/rrwmodule/kluczemojahistoria">Klucze</button>
+      </mat-card-actions>
+    </mat-card>
+  </span>
+
+  <span routerLink="/lazy/szkodliwe" class="przycisk" *ngIf="showSzkodliwe">
+    <mat-card class="card1">
+      <mat-card-header class="kartaNaglowek">
+        <mat-card-subtitle>Zarządzanie subst. szkodliwymi</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="cardContent">
+        <i class="material-icons">
+          warning
+        </i>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/lazy/szkodliwe">SUBST. SZKODLIWE</button>
+      </mat-card-actions>
+    </mat-card>
+  </span>
+
+  <span routerLink="/rrwmodule/przesylki" class="przycisk" *ngIf="showPrzesylki">
+    <mat-card class="card1">
+      <mat-card-header class="kartaNaglowek">
+        <mat-card-subtitle>Paczki i przesyłki</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="cardContent">
+        <i class="material-icons">
+          card_giftcard
+        </i>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/rrwmodule/przesylki">PRZESYŁKI</button>
+      </mat-card-actions>
+    </mat-card>
+  </span>
+
+  <mat-card class="card1" *ngIf="showWaluty">
+    <mat-card-header class="kafelSub">
+      <mat-card-subtitle>Kursy walut</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <div class="pojNapis">
+        <i class="material-icons">
+          attach_money
+        </i>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <br />
+      <button mat-button routerLink="/lazy/currency" disabled>WALUTY</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <span routerLink="/lazy/admin" class="przycisk" *ngIf="showAdministracja">
+    <mat-card class="card1">
+      <mat-card-header class="kartaNaglowek">
+        <mat-card-subtitle>Konfiguracja sytemu</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="cardContent">
+        <i class="material-icons">
+          settings
+        </i>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/lazy/admin">ADMINISTRACJA</button>
+      </mat-card-actions>
+    </mat-card>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header class="kartaNaglowek">
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby przejść do głównego
+          menu.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+
+<div class="container1">
+  <img (click)="zapiszJezyk('PL')" class="flaga" src="../../../assets/images/poland.png">
+  &nbsp;&nbsp;
+  <img (click)="zapiszJezyk('ENG')" class="flaga" src="../../../assets/images/england.png">
+</div>

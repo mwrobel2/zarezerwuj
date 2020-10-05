@@ -1,0 +1,117 @@
+<main>
+  <span *ngIf="userIsAuthenticated">
+    <div id="menu">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu"
+          >STRONA GŁÓWNA</mat-button-toggle
+        >
+        <mat-button-toggle routerLink="/lazy/admin"
+          >Administracja</mat-button-toggle
+        >
+        <mat-button-toggle routerLink="/dictlist">Słowniki</mat-button-toggle>
+        <mat-button-toggle class="imhere"
+          >Słownik: "{{ dictionary.name }}"</mat-button-toggle
+        >
+        <mat-button-toggle (click)="logout()">
+          {{ loggedInUser.name }} {{ loggedInUser.surname }}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <mat-card>
+      <!-- template driven form -->
+      <form
+        (submit)="onSaveSlownik(slownikCreateForm)"
+        #slownikCreateForm="ngForm"
+      >
+        <button mat-raised-button color="primary" type="submit">
+          Zapisz słownik
+        </button>
+        &nbsp;
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          (click)="powrot()"
+        >
+          Anuluj
+        </button>
+        <h4>Informacje podstawowe</h4>
+        <h4>Nazwa systemowa: {{ dictionary.name }}</h4>
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            [ngModel]="dictionary?.description"
+            name="opis"
+            placeholder="nazwa"
+            #opis="ngModel"
+          />
+          <mat-error *ngIf="opis.invalid"
+            >Proszę podać nazwę słownika.</mat-error
+          >
+        </mat-form-field>
+        <!-- <mat-form-field>
+          <input
+            matInput
+            type="text"
+            name="nazwa"
+            [ngModel]="dictionary?.name"
+            placeholder="nazwa słownika"
+            #nazwa="ngModel"
+            required
+            disabled
+          />
+          <mat-error *ngIf="nazwa.invalid"
+            >Proszę podać nazwę słownika.</mat-error
+          >
+        </mat-form-field> -->
+        <label for="wartosci">Wartości</label>
+        <span *ngFor="let slownik of valuesTemp; let i = index"
+          ><br />
+          <!-- <input matInput type="text" name="valuesTemp" [ngModel]="slownik" /> -->
+          <b>{{ slownik }}</b>
+          <a href="#" (click)="$event.preventDefault(); usunWartosc(i)"
+            ><i class="material-icons">delete_forever</i></a
+          >
+        </span>
+        <!-- <button mat-raised-button color="primary" (click)="dodajWartosc()"> -->
+        <br />
+        <a href="#" (click)="$event.preventDefault(); dodajWartosc()"
+          >Dodaj wartość</a
+        >
+        <!-- </button> -->
+
+        <button mat-raised-button color="primary" type="submit">
+          Zapisz słownik
+        </button>
+        &nbsp;
+        <button
+          mat-raised-button
+          color="primary"
+          type="reset"
+          (click)="$event.preventDefault(); powrot()"
+        >
+          Anuluj
+        </button>
+      </form>
+    </mat-card>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle
+          >Zaloguj się do systemu aby zapisać dane.</mat-card-subtitle
+        >
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>

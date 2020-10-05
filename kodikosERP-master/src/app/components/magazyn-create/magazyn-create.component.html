@@ -1,0 +1,504 @@
+<main>
+  <span *ngIf="userIsAuthenticated">
+    <div id="menu">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+        <mat-button-toggle routerLink="/warehouselist">Magazyny</mat-button-toggle>
+        <mat-button-toggle class="imhere"><b>Dodaj towar</b></mat-button-toggle>
+        <mat-button-toggle (click)="logout()">{{ loggedInUser.name }} {{ loggedInUser.surname }}</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <mat-card>
+      <form [formGroup]="form" (submit)="onSaveWarehouse()">
+        <button *ngIf="dispFields.buttonDodajKontr" mat-raised-button color="primary" type="submit">
+          Zapisz informację o towarze
+        </button>
+        &nbsp;
+        <button mat-raised-button color="primary" type="button" (click)="powrot()">
+          Anuluj
+        </button>
+        <h4>Informacje o towarze</h4>
+
+        <mat-form-field>
+          <input matInput type="text" formControlName="nazwaPelna" placeholder="Nazwa towaru" />
+        </mat-form-field>
+
+        <div class="inonerow2">
+          <div>
+            <mat-form-field class="dlugosc2">
+              <input matInput type="text" formControlName="kodIndeks" placeholder="Kod/Indeks" />
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field class="dlugosc2">
+              <input matInput type="text" formControlName="kodIndeksDostawcy"
+                placeholder="Kod/Indeks towaru dostawcy" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="inonerow2">
+          <div>
+            <mat-form-field>
+              <mat-label>Typ towaru</mat-label>
+              <mat-select formControlName="dzialSlownik">
+                <mat-option *ngFor="let dzialSlownik of dictionaries[4]?.values" value="{{ dzialSlownik }}">
+                  {{ dzialSlownik }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field>
+              <input matInput type="number" formControlName="liczba" placeholder="Liczba" />
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field>
+              <mat-label>Jednostka</mat-label>
+              <mat-select formControlName="jednostka">
+                <mat-option *ngFor="let jednostka of dictionaries[5]?.values" value="{{ jednostka }}">
+                  {{ jednostka }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- <div class="div2b"> -->
+
+        <div class="inonerow2">
+          <div>
+            <mat-form-field>
+              <mat-label>Magazyn</mat-label>
+              <mat-select formControlName="warehouseLocation">
+                <mat-option *ngFor="let warehouseLocation of dictionaries[6]?.values" value="{{ warehouseLocation }}">
+                  {{ warehouseLocation }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field>
+              <input matInput type="text" formControlName="regal" placeholder="Regał" />
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field>
+              <input matInput type="text" formControlName="polka" placeholder="Półka" />
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field>
+              <input matInput type="text" formControlName="karton" placeholder="Karton" />
+            </mat-form-field>
+          </div>
+        </div>
+
+
+        <div class="inonerow2">
+          <div>
+            <mat-form-field>
+              <input matInput type="number" formControlName="dlugosc" placeholder="Długość" />
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field>
+              <input matInput type="number" formControlName="wysokosc" placeholder="Wysokość" />
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field>
+              <input matInput type="number" formControlName="szerokosc" placeholder="Szerokość" />
+            </mat-form-field>
+          </div>
+        </div>
+
+
+        <mat-form-field>
+          <textarea matInput rows="4" formControlName="towarOpis" placeholder="szczegóły towaru"></textarea>
+        </mat-form-field>
+
+        <div class="inonerow2">
+          <div>
+            <mat-form-field>
+              <mat-label>Gatunek</mat-label>
+              <mat-select formControlName="gatunek">
+                <mat-option *ngFor="let gatunek of dictionaries[8]?.values" value="{{ gatunek }}">
+                  {{ gatunek }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field>
+              <mat-label>Atest</mat-label>
+              <mat-select formControlName="atest">
+                <mat-option *ngFor="let atest of dictionaries[9]?.values" value="{{ atest }}">
+                  {{ atest }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field>
+              <mat-label>Odbiór</mat-label>
+              <mat-select formControlName="odbior">
+                <mat-option *ngFor="let odbior of dictionaries[10]?.values" value="{{ odbior }}">
+                  {{ odbior }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="inonerow2">
+          <div>
+            <mat-form-field>
+              <input matInput type="number" formControlName="vat" placeholder="stawka VAT (%)" />
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field class="dlugosc1">
+              <mat-label>Cena detaliczna waluta</mat-label>
+              <mat-select formControlName="cenaDetalicznaWaluta">
+                <mat-option *ngFor="let cenaDetalicznaWaluta of dictionaries[1]?.values"
+                  value="{{ cenaDetalicznaWaluta }}">
+                  {{ cenaDetalicznaWaluta }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field>
+              <input matInput type="number" formControlName="cenaExportEuro" placeholder="Cena export Euro" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="napis2">CENA ZAKUPU</div>
+        <div class="inonerow2">
+          <div>
+            <mat-form-field class="dlugosc1">
+              <input matInput type="number" formControlName="cenaZakupuNetto" placeholder="Cena zakupu netto" />
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field class="dlugosc1">
+              <input matInput type="number" formControlName="cenaZakupuBrutto" placeholder="Cena zakupu brutto" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="napis2">SPRZEDAŻ DEDAL</div>
+        <div class="inonerow2">
+          <div>
+            <mat-form-field class="dlugosc1">
+              <input matInput type="number" formControlName="cenaDetalicznaNetto" placeholder="Cena detaliczna netto"
+                (change)=wyliczBruttoDetal($event) (keyup)=wyliczBruttoDetal($event) />
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field class="dlugosc1">
+              <input matInput type="number" formControlName="cenaDetalicznaBrutto" placeholder="Cena detaliczna brutto"
+                (change)=wyliczNettoDetal($event) (keyup)=wyliczNettoDetal($event) />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="napis2">SPRZEDAŻ HURT</div>
+        <div class="inonerow2">
+          <div>
+            <mat-form-field class="dlugosc2">
+              <input matInput type="number" formControlName="cenaHurtowaSprzedazyNetto"
+                placeholder="Cena hurtowa sprzedaży netto" (change)=wyliczBruttoHurt($event)
+                (keyup)=wyliczBruttoHurt($event) />
+            </mat-form-field>
+          </div>
+          &nbsp;
+          <div>
+            <mat-form-field class="dlugosc2">
+              <input matInput type="number" formControlName="cenaHurtowaSprzedazyBrutto"
+                placeholder="Cena hurtowa sprzedaży brutto" (change)=wyliczNettoHurt($event)
+                (keyup)=wyliczNettoHurt($event) />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-form-field>
+          <input matInput type="text" formControlName="dostawcaKod" placeholder="Dostawca" />
+        </mat-form-field>
+
+        <div class="formatkaRow">
+          <form id="filter" (keyup)="zerujP()">
+            <label>
+              <b>Dostawca</b>: </label>
+            <input type="text" [(ngModel)]="term" name="term" />
+          </form>
+        </div>
+        <div class="formatkaRow" *ngIf="this.contractors">
+          <div class="odstep">
+            <ul>
+              <li
+                *ngFor="let contractor of contractors | contractors:term | paginate: { itemsPerPage:5, currentPage: p }">
+                <span (click)="wybierzKontrahenta(contractor)" class="centrujTekst">
+                  <a>{{ contractor.shortName }}</a>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="formatkaRow2" *ngIf="this.contractors">
+          <pagination-controls (pageChange)="p=$event" previousLabel="Poprzedni" nextLabel="Następny">
+          </pagination-controls>
+        </div>
+
+        <mat-form-field>
+          <input matInput type="text" formControlName="barcode" placeholder="Kod QR/Barcode" />
+        </mat-form-field>
+
+        <mat-checkbox name="widocznyWSklepie" formControlName="widocznyWSklepie">Towar widoczny w sklepie
+        </mat-checkbox>
+        <!-- </div> -->
+
+        <mat-form-field *ngIf="this.dispFields.comments">
+          <textarea matInput rows="4" formControlName="comments" placeholder="uwagi"></textarea>
+        </mat-form-field>
+
+        <!-- Firmy -->
+
+        <div class="limitkred" *ngIf="dispFields.firmy">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="firmyDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Nazwa firmy
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.name }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="warn" (click)="deleteFirma(element)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="firmyKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: firmyKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="limitkred" *ngIf="dispFields.firmy">
+          <div class="div2b">
+            <mat-form-field>
+              <mat-label>Firma</mat-label>
+              <mat-select formControlName="firma">
+                <mat-option (click)="wyborFirmy(firma)" *ngFor="let firma of dictionaries[2]?.values"
+                  value="{{ firma }}">{{ firma }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Projekty  -->
+
+        <div class="limitkred" *ngIf="dispFields.projekty">
+          <div class="tabelaDiv">
+            <table mat-table [dataSource]="projektyDataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Projekt
+                </th>
+                <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                  {{ element.name }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                  Akcje
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-button color="warn" (click)="deleteProjekt(element)" type="button">
+                    Usuń
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="projektyKolumny"></tr>
+              <tr mat-row *matRowDef="let row; columns: projektyKolumny"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="limitkred" *ngIf="dispFields.projekty">
+          <div class="div2b">
+            <mat-form-field>
+              <mat-label>Projekt</mat-label>
+              <mat-select formControlName="projekt">
+                <mat-option (click)="wyborProjektu(projekt)" *ngFor="let projekt of dictionaries[3]?.values"
+                  value="{{ projekt }}">{{ projekt }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- wybór plików z już istniejącego towaru -->
+
+        <div class="limitkred">
+          <h4>Wybór już zapisanych plików w bazie</h4>
+        </div>
+
+        <div class="limitkred">
+          <div class="limitkred">
+            <form id="filter" (keyup)="zerujQ()">
+              <label>
+                <b>Nazwa towaru</b>: </label>
+              <input type="text" [(ngModel)]="nazwaIstTowaru" name="nazwaIstTowaru" />
+            </form>
+          </div>
+          <div class="limitkred" *ngIf="this.towary">
+            <div class="odstep">
+              <ul>
+                <li
+                  *ngFor="let towar of towary | towarFullName:nazwaIstTowaru | paginate: { itemsPerPage:5, currentPage: q }">
+                  <span (click)="wybierzTowar(towar)" class="centrujTekst">
+                    <a>{{ towar.fullName }}</a>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="limitkred">
+          <form (submit)="onSearchIstFiles(plikiIstForm)" #plikiIstForm="ngForm">
+            <label>
+              <b>Nazwa towaru</b>: </label>
+            <input type="text" [(ngModel)]="nazwaIstTowaru" name="nazwaIstTowaru" />
+            <button type="submit">szukaj</button>
+          </form>
+        </div> -->
+
+        <!-- mat table Wybrane pliki -->
+
+        <div class="limitkred" *ngIf="dispFields.pliki">
+          <div *ngIf="plikiLocal.length > 0">
+            <div class="tabelaDiv">
+              <table mat-table [dataSource]="plikiDataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                    Nazwa
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                    <a href="{{ backendUrl }}/{{ element.katalog }}/{{ element.fileName }}" target="_blank">{{ element.name }}</a>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rodzaj">
+                  <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                    Typ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                    {{ element.rodzaj }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef class="klasaKolumny">
+                    Akcje
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <button mat-button color="warn" (click)="deletePlik(element)" type="button">
+                      Usuń plik
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="plikiKolumny"></tr>
+                <tr mat-row *matRowDef="let row; columns: plikiKolumny"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- dodawanie plików  -->
+
+        <div class="limitkred" *ngIf="dispFields.pliki">
+          <form [formGroup]="formPliki" (submit)="onAddPliki()">
+            <div class="div2b">
+              <mat-form-field>
+                <mat-label>Typ pliku/plików</mat-label>
+                <mat-select formControlName="typPliku">
+                  <mat-option *ngFor="let plik of dictionaries[7]?.values" value="{{ plik }}"
+                    (click)="ustawAktualnyTypPliku(plik)">{{ plik }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="div2b">
+              <button mat-stroked-button type="button" (click)="filePicker.click()">
+                Wybierz pliki
+              </button>
+              <input type="file" multiple #filePicker (change)="onFilesPicked($event)" />
+            </div>
+            <br />
+          </form>
+        </div>
+
+        <!-- przyciski zapisz anuluj -->
+
+        <button mat-raised-button color="primary" type="submit" *ngIf="dispFields.buttonDodajKontr">
+          Zapisz towar
+        </button>
+        &nbsp;
+        <button mat-raised-button color="primary" type="button" (click)="powrot()" *ngIf="mozliwoscAnulowania">
+          Anuluj
+        </button>
+        <button mat-raised-button color="primary" type="button" *ngIf="!mozliwoscAnulowania" disabled>
+          Anuluj
+        </button>
+      </form>
+    </mat-card>
+  </span>
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby zapisać dane.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>

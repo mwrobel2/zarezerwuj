@@ -1,0 +1,100 @@
+<!-- <div id="menu" *ngIf="userIsAuthenticated"> -->
+<div id="menu">
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+    <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+    <mat-button-toggle class="imhere">Administracja</mat-button-toggle>
+    <mat-button-toggle (click)="logout()">
+      {{ loggedInUser.name }} {{ loggedInUser.surname }}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<div class="container1">
+
+  <mat-card class="card1">
+    <mat-card-header>
+      <!-- <mat-card-title>Administracja</mat-card-title> -->
+      <mat-card-subtitle>Użytkownicy systemu</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        perm_identity
+      </i>
+    </mat-card-content>
+    <!-- <div class="vspacer"></div> -->
+    <mat-card-actions>
+      <button mat-button routerLink="/userlist">UŻYTKOWNICY</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1">
+    <mat-card-header>
+      <!-- <mat-card-title>Administracja</mat-card-title> -->
+      <mat-card-subtitle>Zarządzanie słownikami</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        list
+      </i>
+    </mat-card-content>
+    <!-- <div class="vspacer"></div> -->
+    <mat-card-actions>
+      <button mat-button routerLink="/dictlist">EDYTUJ SŁOWNIKI</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1">
+    <mat-card-header>
+      <!-- <mat-card-title>Administracja</mat-card-title> -->
+      <mat-card-subtitle>Zarządzanie formatkami</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        assignment
+      </i>
+    </mat-card-content>
+    <!-- <div class="vspacer"></div> -->
+    <mat-card-actions>
+      <button mat-button routerLink="/lazy/formsadmin">EDYTUJ FORMATKI</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="card1">
+    <mat-card-header>
+      <!-- <mat-card-title>Administracja</mat-card-title> -->
+      <mat-card-subtitle>Podgląd logowań pracowników</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="cardContent">
+      <i class="material-icons">
+        people
+      </i>
+    </mat-card-content>
+    <!-- <div class="vspacer"></div> -->
+    <mat-card-actions>
+      <button mat-button routerLink="/lazy/logsadmin">ZOBACZ LOGOWANIA</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- <br />
+  <button routerLink="/signup">Dodaj użytkownika</button> -->
+  <!-- <br />
+  <button routerLink="/userlist">Edycja użytkowników</button> -->
+  <!-- <br />
+  <button routerLink="/dictlist">Edycja słowników</button> -->
+
+  <div id="carddiv" *ngIf="!userIsAuthenticated">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Nie zalogowany</mat-card-title>
+        <mat-card-subtitle>Zaloguj się do systemu aby przejść do głównego
+          menu.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" routerLink="/login">
+          Logowanie do systemu
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

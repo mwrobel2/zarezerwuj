@@ -1,0 +1,41 @@
+export interface AuthData {
+  login: string;
+  password: string;
+  email?: string;
+  department?: string;
+  name?: string;
+  surname?: string;
+  contractorFields?: {
+    accountManager?: boolean,
+    accountManagerLogin?: boolean,
+    addBy?: boolean,
+    addDate?: boolean,
+    balance?: boolean,
+    ceo?: boolean,
+    city?: boolean,
+    comments?: boolean,
+    contrType?: boolean,
+    country?: boolean,
+    creditLimit?: boolean,
+    creditLimitCurrency?: boolean,
+    fullName?: boolean,
+    krs?: boolean,
+    modBy?: boolean,
+    modDate?: boolean,
+    nip?: boolean,
+    paymentDeadline?: boolean,
+    postcode?: boolean,
+    regon?: boolean,
+    shortName?: boolean,
+    status?: boolean,
+    street?: boolean,
+    countryShipping?: boolean,
+    streetShipping?: boolean,
+    cityShipping?: boolean,
+    postcodeShipping?: boolean,
+    buttonDodajKontr?: boolean,
+    buttonOfertaKontr?: boolean,
+    buttonEdytujKontr?: boolean,
+    buttonUsunKontr?: boolean,
+  };
+}

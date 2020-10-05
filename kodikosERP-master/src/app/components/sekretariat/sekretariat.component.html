@@ -1,0 +1,207 @@
+<main>
+    <!-- <span *ngIf="userIsAuthenticated"> -->
+    <span>
+      <div id="menu">
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+          <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+          <mat-button-toggle class="imhere"><b>Sekretariat</b></mat-button-toggle>
+          <mat-button-toggle routerLink="/lazy/sekretariatcreate" *ngIf="dispFields.buttonDodajKontr">Dodaj dokument
+          </mat-button-toggle>
+          <mat-button-toggle (click)="logout()">{{ this.loggedInUser.name }} {{ this.loggedInUser.surname }}
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="searchClass">
+        <form (submit)="onSearchAssortment(assortmentSearchForm)" #assortmentSearchForm="ngForm" class="searchForm">
+          &nbsp;
+          <mat-form-field class="formfiel">
+            <mat-placeholder class="placclass">nazwa dokumentu</mat-placeholder>
+            <input matInput type="text" name="nazwaPelna" [(ngModel)]="assortment.fullName" />
+          </mat-form-field>
+          &nbsp;
+          <mat-form-field class="formfiel" *ngIf="dispFields.comments">
+            <mat-placeholder class="placclass">uwagi</mat-placeholder>
+            <input matInput type="text" name="comments" [(ngModel)]="assortment.comments" />
+          </mat-form-field>
+          <button mat-raised-button type="submit">
+            Szukaj
+          </button>
+          <button mat-raised-button color="primary" type="button" (click)="clearForm(assortmentSearchForm)">
+            Wyczyść
+          </button>
+        </form>
+      </div>
+  
+      <mat-spinner *ngIf="isLoading" class="spin"></mat-spinner>
+      <mat-accordion multi="true" *ngIf="assortments.length > 0 && !isLoading">
+        <mat-expansion-panel *ngFor="let assortment of assortments">
+          <mat-expansion-panel-header>
+            <div id="dispHeader">
+              <span id="spanNazwa">
+                <b>{{ assortment.fullName | uppercase }}</b>
+                <span *ngIf="assortment.gatunek">&nbsp; &#8741; {{ assortment.gatunek }}</span>
+                <span *ngIf="assortment.atest">&nbsp; &#8741; {{ assortment. atest }}</span>
+                <span *ngIf="assortment.odbior">&nbsp; &#8741; {{ assortment.odbior }}</span>
+              </span>
+              <span id="spanSpacer"></span>
+              <span class="spanMenu">{{ assortment.rodzajTowaru }}</span>
+            </div>
+          </mat-expansion-panel-header>
+          <div id="dispContent">
+            <div id="infoBasic">
+  
+              <div>
+                <p>
+                  <b>{{ assortment.fullName }}</b>
+                  <br /><br />
+                  <span *ngIf="assortment.rodzajTowaru">Rodzaj: <b>{{ assortment.rodzajTowaru }}</b><br></span>
+                  <span *ngIf="assortment.gatunek">Gatunek asortymentu: <b>{{ assortment.gatunek }}</b><br></span>
+                  <span *ngIf="assortment.atest">Atesty: <b>{{ assortment.atest }}</b><br></span>
+                  <span *ngIf="assortment.odbior">Odbiory: <b>{{ assortment.odbior }}</b><br></span>
+                </p>
+              </div>
+  
+              <div class="fullWidth" *ngIf="assortment.comments">
+                <p>
+                  OPIS TOWARU:<br />
+                  <b>{{ assortment.towarOpis }}</b>
+                </p>
+              </div>
+  
+              <div class="fullWidth" *ngIf="assortment.comments">
+                <p>
+                  UWAGI:<br />
+                  <b>{{ assortment.comments }}</b>
+                </p>
+              </div>
+  
+  
+              <span *ngIf="assortment.pliki.length > 0 && dispFields.pliki">
+                <div>
+                  <p>PLIKI:
+                    <br />
+                    <div *ngIf="assortment.pliki[0].name" class="tabelaDiv">
+                      <table mat-table [dataSource]="assortment.pliki" class="mat-elevation-z8">
+  
+                        <ng-container matColumnDef="name">
+                          <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Nazwa</th>
+                          <td mat-cell *matCellDef="let element" class="klasaKolumny">
+                            <a href="{{backendUrl}}/asortyment/{{element.fileName}}"
+                              target="_blank">{{ element.name }}</a>
+                          </td>
+                        </ng-container>
+  
+                        <ng-container matColumnDef="rodzaj">
+                          <th mat-header-cell *matHeaderCellDef class="klasaKolumny">Typ</th>
+                          <td mat-cell *matCellDef="let element" class="klasaKolumny">{{ element.rodzaj }}</td>
+                        </ng-container>
+  
+                        <tr mat-header-row *matHeaderRowDef="plikiKolumny"></tr>
+                        <tr mat-row *matRowDef="let row; columns: plikiKolumny"></tr>
+                      </table>
+                    </div>
+                </div>
+              </span>
+  
+  
+              <!-- zmodyfikowany, dodany przez -->
+  
+              <div class="fullWidth" *ngIf="assortment.addBy.name">
+                <p>
+                  Dodany przez:
+                  <b>
+                    {{ assortment.addBy.name }} {{ assortment.addBy.surname }} -
+                    {{ assortment.addDate | date: 'dd.MM.yyyy HH:mm:ss' }}
+                  </b>
+                </p>
+              </div>
+              <div class="fullWidth" *ngIf="assortment.modBy.name">
+                <p>
+                  Zmodyfikowany przez:
+                  <b>
+                    {{ assortment.modBy.name }} {{ assortment.modBy.surname }} -
+                    {{ assortment.modDate | date: 'dd.MM.yyyy HH:mm:ss' }}
+                  </b>
+                </p>
+              </div>
+  
+            </div>
+  
+          </div>
+  
+  
+          <!-- firmy -->
+  
+          <div *ngIf="assortment.firms && assortment.firms.length > 0 && dispFields.firmy">
+            <br>
+            <b>Firmy:</b>
+            <ul>
+              <li *ngFor="let firma of assortment.firms">{{ firma }}</li>
+            </ul>
+          </div>
+  
+          <!-- projekty -->
+  
+          <div *ngIf="assortment.projects && assortment.projects.length > 0 && dispFields.projekty">
+            <br>
+            <b>Projekty:</b>
+            <ul>
+              <li *ngFor="let projekt of assortment.projects">{{ projekt }}</li>
+            </ul>
+          </div>
+  
+          <!-- przyciski -->
+  
+          <mat-action-row>
+            <button mat-button color="primary" (click)="utworzNaWzor(assortment.id)">Dodaj podobny</button>
+            <button mat-button color="primary" *ngIf="dispFields.buttonEdytujKontr"
+              [routerLink]="['/assortmentedit', assortment.id]">
+              Edytuj
+            </button>
+            <button mat-button color="warn" *ngIf="dispFields.buttonUsunKontr"
+              (click)="onDelete(assortment.id, assortment.pliki)">
+              Usuń
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <mat-paginator *ngIf="assortments.length > 0" id="topPag" [length]="totalAssortments"
+        [pageSize]="assortmentsPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"
+        class="pagbottom">
+      </mat-paginator>
+  
+      <div id="carddiv" *ngIf="assortments.length <= 0">
+        <mat-card class=" example-card">
+          <mat-card-header>
+            <div mat-card-avatar class="example-header-image"></div>
+            <mat-card-title>Brak Danych</mat-card-title>
+            <mat-card-subtitle>W bazie nie ma jeszcze informacji o asortymencie.</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="powrot()">
+              Powrót
+            </button>
+            <button mat-raised-button color="primary" *ngIf="dispFields.buttonDodajKontr" routerLink="/assortmentcreate">
+              Dodaj substancję
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </span>
+  
+    <div id="carddiv" *ngIf="!userIsAuthenticated">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Nie zalogowany</mat-card-title>
+          <mat-card-subtitle>Zaloguj się do systemu aby odczytać dane.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" routerLink="/login">
+            Logowanie do systemu
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </main>
+  

@@ -1,0 +1,60 @@
+<div id="menu" *ngIf="userIsAuthenticated">
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+    <mat-button-toggle routerLink="/glownemenu">STRONA GŁÓWNA</mat-button-toggle>
+    <mat-button-toggle routerLink="/lazy/admin">Administracja</mat-button-toggle>
+    <mat-button-toggle routerLink="/lazy/formsadmin">Edytuj Formatki</mat-button-toggle>
+    <mat-button-toggle class="imhere">Edycja Kontrahentów</mat-button-toggle>
+    <mat-button-toggle (click)="logout()">
+      {{ loggedInUser.name }} {{ loggedInUser.surname }}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<main class="kontent">
+  <mat-card class="karta">
+    <mat-card-title class="kontent">Formatka<br>Kontrahenci</mat-card-title>
+    <mat-card-content class="kontent">
+      <form (submit)="onSaveKontrahentForm(kontrahenciForm)" #kontrahenciForm="ngForm">
+        <mat-checkbox [(ngModel)]="dispFields.balance" name="balance">saldo</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.paymentDeadline" name="paymentDeadline">termin płatności</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.creditLimit" name="creditLimit">limit kredytowy</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.comments" name="comments">uwagi</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.buttonDodajKontr" name="buttonDodajKontr">przycisk: Dodaj kontrahenta</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.buttonEdytujKontr" name="buttonEdytujKontr">przycisk: Edytuj kontrahenta</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.buttonOfertaKontr" name="buttonOfertaKontr">przycisk: Przygotuj ofertę</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.buttonUsunKontr" name="buttonUsunKontr">przycisk: Usuń kontrahenta</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.adres" name="adres">dane adresowe</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.kontakty" name="kontakty">informacje o osobach do kontaktu</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.firmy" name="firmy">firmy</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.projekty" name="projekty">projekty</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.kontBankowe" name="kontBankowe">konta bankowe</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.pliki" name="pliki">pliki</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.buttonPliki" name="buttonPliki">przycisk: Wybierz pliki</mat-checkbox>
+        <br>
+        <mat-checkbox [(ngModel)]="dispFields.widziWszystkie" name="widziWszystkie">Widzi wszystkie wpisy w bazie (zaznaczony) / Widzi tylko swoje wpisy (odznaczony)</mat-checkbox>
+        <br><br>
+        <button mat-raised-button color="primary" type="submit">
+          Zapisz
+        </button>
+        &nbsp;
+        <button mat-raised-button color="primary" type="button" (click)="powrot()">
+          Anuluj
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</main>

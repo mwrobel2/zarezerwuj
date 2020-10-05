@@ -1,0 +1,26 @@
+<font color="white">
+  <h2>Kontrahenci</h2>
+  <!-- <h3>Struktura pliku:</h3>
+  <p>
+    Identyfikator kontrahenta wykorzystywany w pliku CSV z danymi dokumentów,
+    Skrót;Nazwa;Kod kraju;NIP;Miejscowość;Gmina;Ulica;Nr domu, Nr mieszkania;Kod
+    pocztowy;Poczta;Symbol rachunku bankowego;Numer rachunku bankowego.
+  </p>
+  <h3>Wartości:</h3>
+  <p *ngFor="let contractor of contractors">
+    {{ contractor.id }};{{ contractor.shortName }};{{ contractorFullName }};{{
+      contractor.country
+    }};{{ contractor.nip }};{{ contractor.city }};{{ contractor.city }};{{
+      contractor.street
+    }};0;0;{{ contractor.postcode }};{{ contractor.city }};symbol rachunku
+    bankowego;numer rachunku bankowego
+  </p> -->
+  <!-- <p>{{ fileContractors }}</p> -->
+  <button (click)="saveTextAsFile(fileContractors, 'kontrahenci.csv')">
+    Pobierz plik CSV
+  </button>
+  <h2>Faktury</h2>
+  <button (click)="saveTextAsFile(fileInvoices, 'faktury.csv')">
+    Pobierz plik CSV
+  </button>
+</font>
